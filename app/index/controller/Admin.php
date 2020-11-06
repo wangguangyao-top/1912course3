@@ -16,4 +16,7 @@ class Admin
 	    echo "大林子又他妈的来了";
         return view('index@Admin/index');
     }
+    public function kkk(){
+        return view("index@Admin/kkk");
+    }
 }
