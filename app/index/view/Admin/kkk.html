@@ -3,17 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>layout 后台大布局 - Layui</title>
+  <title>在线教育 后台 - Layui</title>
   <link rel="stylesheet" href="/layui/css/layui.css">
 </head>
 <body class="layui-layout-body">
 <div class="layui-layout layui-layout-admin">
   <div class="layui-header">
-    <div class="layui-logo">layui 后台布局</div>
+    <div class="layui-logo">在线教育 后台</div>
     <!-- 头部区域（可配合layui已有的水平导航） -->
     <ul class="layui-nav layui-layout-left">
-      <li class="layui-nav-item"><a href="">控制台</a></li>
-      <li class="layui-nav-item"><a href="">商品管理</a></li>
       <li class="layui-nav-item"><a href="">用户</a></li>
       <li class="layui-nav-item">
         <a href="javascript:;">其它系统</a>
@@ -43,26 +41,68 @@
     <div class="layui-side-scroll">
       <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
       <ul class="layui-nav layui-nav-tree"  lay-filter="test">
-        <li class="layui-nav-item layui-nav-itemed">
-          <a class="" href="javascript:;">所有商品</a>
-
+        <li class="layui-nav-item">
+          <a class="" href="javascript:;">用户管理</a>
           <dl class="layui-nav-child">
-            <dd><a href="javascript:;">列表一</a></dd>
-            <dd><a href="javascript:;">列表二</a></dd>
-            <dd><a href="javascript:;">列表三</a></dd>
-            <dd><a href="">超链接</a></dd>
+            <dd><a href="javascript:;">用户添加</a></dd>
+            <dd><a href="javascript:;">用户列表</a></dd>
           </dl>
         </li>
         <li class="layui-nav-item">
-          <a href="javascript:;">解决方案</a>
+          <a href="javascript:;">权限管理</a>
           <dl class="layui-nav-child">
-            <dd><a href="javascript:;">列表一</a></dd>
-            <dd><a href="javascript:;">列表二</a></dd>
-            <dd><a href="">超链接</a></dd>
+            <dd><a href="javascript:;">权限添加</a></dd>
+            <dd><a href="javascript:;">权限列表</a></dd>
           </dl>
         </li>
-        <li class="layui-nav-item"><a href="">云市场</a></li>
-        <li class="layui-nav-item"><a href="">发布商品</a></li>
+        <li class="layui-nav-item">
+          <a href="javascript:;">角色管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">角色添加</a></dd>
+            <dd><a href="javascript:;">角色列表</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item">
+          <a href="javascript:;">RBAC关系</a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">用户与角色</a></dd>
+            <dd><a href="javascript:;">角色与权限</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item">
+          <a href="javascript:;">课程管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">课程添加</a></dd>
+            <dd><a href="javascript:;">课程列表</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item">
+          <a href="javascript:;">资讯管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">资讯添加</a></dd>
+            <dd><a href="javascript:;">资讯列表</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item">
+          <a href="javascript:;">讲师管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">讲师添加</a></dd>
+            <dd><a href="javascript:;">讲师列表</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item">
+          <a href="javascript:;">题库管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">题目添加</a></dd>
+            <dd><a href="javascript:;">题目列表</a></dd>
+          </dl>
+        </li>
+        <li class="layui-nav-item">
+          <a href="javascript:;">问答管理</a>
+          <dl class="layui-nav-child">
+            <dd><a href="javascript:;">问答列表</a></dd>
+          </dl>
+        </li>
       </ul>
     </div>
   </div>
