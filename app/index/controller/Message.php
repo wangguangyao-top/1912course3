@@ -57,7 +57,7 @@ class Message extends Controller
      */
     public function edit($id)
     {
-        //
+        return view("index@message/edit");
     }
 
     /**

@@ -57,7 +57,7 @@ class Question extends Controller
      */
     public function edit($id)
     {
-        //
+        return view("index@question/edit");
     }
 
     /**

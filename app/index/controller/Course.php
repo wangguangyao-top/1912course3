@@ -57,7 +57,7 @@ class Course extends Controller
      */
     public function edit($id)
     {
-        //
+        return view("index@course/edit");
     }
 
     /**

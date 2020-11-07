@@ -57,7 +57,7 @@ class Lect extends Controller
      */
     public function edit($id)
     {
-        //
+        return view("index@lect/edit");
     }
 
     /**

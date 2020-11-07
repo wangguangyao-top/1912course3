@@ -2,35 +2,15 @@
 {block name="body"}
 <form  method="post" class="layui-form">
     <div class="layui-form-item">
-        <label class="layui-form-label">课程名称</label>
+        <label class="layui-form-label">讲师名称</label>
         <div class="layui-input-block">
             <input type="text" name="title" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">父级id</label>
+        <label class="layui-form-label">讲师照片</label>
         <div class="layui-input-block">
-            <select name="city" lay-verify="required">
-                <option value=""></option>
-                <option value="0">1</option>
-                <option value="1">2</option>
-                <option value="2">3</option>
-                <option value="3">4</option>
-                <option value="4">5</option>
-            </select>
-        </div>
-    </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">讲师选择</label>
-        <div class="layui-input-block">
-            <select name="city" lay-verify="required">
-                <option value=""></option>
-                <option value="0">杨万星</option>
-                <option value="1">苏富帅</option>
-                <option value="2">吴孟林</option>
-                <option value="3">赵志宁</option>
-                <option value="4">王光耀</option>
-            </select>
+            <input type="file" name="title" required  lay-verify="required" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
@@ -46,20 +26,14 @@
             </select>
         </div>
     </div>
-    <div class="layui-form-item">
-        <label class="layui-form-label">课程图片</label>
-        <div class="layui-input-block">
-            <input type="file" name="title" required  lay-verify="required"autocomplete="off" class="layui-input">
-        </div>
-    </div>
     <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">课程简介</label>
+        <label class="layui-form-label">个人简历</label>
         <div class="layui-input-block">
             <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
-        <label class="layui-form-label">课程公告</label>
+        <label class="layui-form-label">讲课风格</label>
         <div class="layui-input-block">
             <textarea name="desc" placeholder="请输入内容" class="layui-textarea"></textarea>
         </div>
