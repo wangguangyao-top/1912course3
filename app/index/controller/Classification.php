@@ -57,7 +57,7 @@ class Classification extends Controller
      */
     public function edit($id)
     {
-        //
+        return view("index@classification/edit");
     }
 
     /**

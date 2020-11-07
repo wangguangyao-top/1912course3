@@ -57,7 +57,7 @@ class Category extends Controller
      */
     public function edit($id)
     {
-        //
+        return view("index@category/edit");
     }
 
     /**

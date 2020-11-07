@@ -19,9 +19,14 @@
         <td>哈哈</td>
         <td>
             <button type="button" class="layui-btn layui-btn-normal">删除</button>
-            <button type="button" class="layui-btn layui-btn-normal">修改</button>
+            <button type="button" class="layui-btn layui-btn-normal edit">修改</button>
         </td>
     </tr>
     </tbody>
 </table>
+<script>
+    $(document).on("click",".edit",function(){
+        location.href="/index/category/edit?id=1";
+    })
+</script>
 {/block}
