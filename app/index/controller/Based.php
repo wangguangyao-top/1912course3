@@ -5,7 +5,7 @@ namespace app\index\controller;
 use think\Controller;
 use think\Request;
 
-class Role extends Controller
+class Based extends Controller
 {
     /**
      * 显示资源列表
@@ -14,7 +14,7 @@ class Role extends Controller
      */
     public function index()
     {
-        return view("index@role/index");
+        return view("index@based/index");
     }
 
     /**
@@ -24,7 +24,7 @@ class Role extends Controller
      */
     public function create()
     {
-        return view("index@role/create");
+        return view("index@based/create");
     }
 
     /**
