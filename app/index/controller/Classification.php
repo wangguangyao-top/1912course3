@@ -14,7 +14,7 @@ class Classification extends Controller
      */
     public function index()
     {
-        return view("index@answer/index");
+        return view("index@classification/index");
     }
 
     /**
