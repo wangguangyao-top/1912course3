@@ -14,7 +14,7 @@ class Answer extends Controller
      */
     public function index()
     {
-        //
+        return view("index@answer/index");
     }
 
     /**

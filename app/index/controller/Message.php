@@ -14,7 +14,7 @@ class Message extends Controller
      */
     public function index()
     {
-        //
+        return view("index@message/index");
     }
 
     /**

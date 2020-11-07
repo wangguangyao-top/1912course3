@@ -5,7 +5,7 @@ namespace app\index\controller;
 use think\Controller;
 use think\Request;
 
-class Lect extends Controller
+class Classification extends Controller
 {
     /**
      * 显示资源列表
@@ -14,7 +14,7 @@ class Lect extends Controller
      */
     public function index()
     {
-        return view("index@lect/index");
+        return view("index@answer/index");
     }
 
     /**
@@ -24,7 +24,7 @@ class Lect extends Controller
      */
     public function create()
     {
-        return view("index@lect/create");
+        return view("index@classification/create");
     }
 
     /**

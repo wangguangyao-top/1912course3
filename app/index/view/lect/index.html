@@ -1,0 +1,32 @@
+{extend name="public/common"}
+{block name="body"}
+<table class="layui-table">
+    <colgroup>
+        <col width="150">
+        <col width="200">
+        <col>
+    </colgroup>
+    <thead>
+    <tr>
+        <th>管理员id</th>
+        <th>管理员名称</th>
+        <th>角色权限</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>1</td>
+        <td>储赢</td>
+        <td>
+            <a href="#" class="layui-bg-orange">角色</a>|
+            <a href="#" class="layui-bg-green">权限</a>
+        </td>
+        <td>
+            <button type="button" class="layui-btn layui-btn-normal">删除</button>
+            <button type="button" class="layui-btn layui-btn-normal">修改</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+{/block}
