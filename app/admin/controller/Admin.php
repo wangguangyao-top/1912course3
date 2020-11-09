@@ -14,6 +14,6 @@ class Admin
     }
     public function abc(){
         echo 12345;
-        return view('Admin@Admin/Admin');
+        return view('Index@Index/Index');
     }
 }

@@ -14,6 +14,6 @@ class Admin
     }
     public function abc(){
         echo 123;
-        return view('index@Admin/index');
+        return view('index@Index/index');
     }
 }
