@@ -4,6 +4,8 @@ namespace app\index\controller;
 
 use think\Controller;
 use think\Request;
+use app\index\model\ClassificationModel;
+use app\index\model\QuestionModel;
 
 class Question extends Controller
 {
@@ -14,7 +16,15 @@ class Question extends Controller
      */
     public function index()
     {
-        return view("index@question/index");
+        $where=[
+            "course_question_bank.is_del"=>1
+        ];
+        $bank_info=QuestionModel::
+            leftjoin("course_question_classification","course_question_bank.cla_id=course_question_classification.cla_id")
+            ->where($where)
+            ->select();
+
+        return view("index@question/index",compact("bank_info"));
     }
 
     /**
@@ -24,7 +34,8 @@ class Question extends Controller
      */
     public function create()
     {
-        return view("index@question/create");
+        $cla_info=ClassificationModel::select();
+        return view("index@question/create",compact("cla_info"));
     }
 
     /**
@@ -35,7 +46,23 @@ class Question extends Controller
      */
     public function save(Request $request)
     {
-        //
+        $bank_title=$request->post("bank_title");
+        $bank_type=$request->post("bank_type");
+        $cla_id=$request->post("cla_id");
+        $bank_content=$request->post("bank_content");
+        $bank_data=[
+            "bank_title"=>$bank_title,
+            "bank_type"=>$bank_type,
+            "cla_id"=>$cla_id,
+            "bank_content"=>$bank_content,
+            "add_time"=>time(),
+        ];
+        $res=QuestionModel::insert($bank_data);
+        if($res){
+            echo json_encode(["code"=>200,"msg"=>"添加成功"]);die;
+        }else{
+            echo json_encode(["code"=>1,"msg"=>"添加失败"]);die;
+        }
     }
 
     /**
@@ -55,9 +82,11 @@ class Question extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function edit($id)
+    public function edit($bank_id)
     {
-        return view("index@question/edit");
+        $cla_info=ClassificationModel::select();
+        $edit_info=QuestionModel::find($bank_id);
+        return view("index@question/edit",compact("edit_info","cla_info"));
     }
 
     /**
@@ -67,9 +96,26 @@ class Question extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $bank_id=$request->post("bank_id");
+        $bank_title=$request->post("bank_title");
+        $bank_type=$request->post("bank_type");
+        $cla_id=$request->post("cla_id");
+        $bank_content=$request->post("bank_content");
+        $bank_data=[
+            "bank_title"=>$bank_title,
+            "bank_type"=>$bank_type,
+            "cla_id"=>$cla_id,
+            "bank_content"=>$bank_content,
+            "add_time"=>time(),
+        ];
+        $res=QuestionModel::where(["bank_id"=>$bank_id])->update($bank_data);
+        if($res){
+            echo json_encode(["code"=>200,"msg"=>"修改成功"]);die;
+        }else{
+            echo json_encode(["code"=>1,"msg"=>"修改失败"]);die;
+        }
     }
 
     /**
@@ -78,8 +124,14 @@ class Question extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function delete($id)
+    public function delete(Request $request)
     {
-        //
+        $bank_id=$request->post("bank_id");
+        $res=QuestionModel::where(["bank_id"=>$bank_id])->update(["is_del"=>2]);
+        if($res){
+            echo json_encode(["code"=>200,"msg"=>"删除成功"]);die;
+        }else{
+            echo json_encode(["code"=>1,"msg"=>"删除失败"]);die;
+        }
     }
 }
