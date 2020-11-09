@@ -4,6 +4,8 @@ namespace app\index\controller;
 
 use think\Controller;
 use think\Request;
+use app\index\model\MessageModel;
+
 
 class Message extends Controller
 {
@@ -14,7 +16,8 @@ class Message extends Controller
      */
     public function index()
     {
-        return view("index@message/index");
+        $data = MessageModel::where('is_del',1)->select();
+        return view("index@message/index",['data'=>$data]);
     }
 
     /**
@@ -35,7 +38,20 @@ class Message extends Controller
      */
     public function save(Request $request)
     {
-        //
+        $message_title = $request->post('message_title');
+        $message_name = $request->post('message_name');
+        $is_hut = $request->post('is_hut');
+        $data = [
+          'message_title'=>$message_title,
+          'message_name'=>$message_name,
+            'is_hut'=>$is_hut
+        ];
+        $res = MessageModel::insert($data);
+        if($res){
+            $this->success('添加成功','message/index');
+        }else{
+            $this->error('添加失败','message/create');
+        }
     }
 
     /**
@@ -57,7 +73,8 @@ class Message extends Controller
      */
     public function edit($id)
     {
-        return view("index@message/edit");
+        $message = MessageModel::where('message_id',$id)->find();
+        return view("index@message/edit",['message'=>$message]);
     }
 
     /**
@@ -69,7 +86,20 @@ class Message extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $message_title = $request->post('message_title');
+        $message_name = $request->post('message_name');
+        $is_hut = $request->post('is_hut');
+        $data = [
+            'message_title'=>$message_title,
+            'message_name'=>$message_name,
+            'is_hut'=>$is_hut
+        ];
+        $res = MessageModel::where('message_id',$id)->update($data);
+        if($res){
+            $this->success('修改成功','message/index');
+        }else{
+            $this->error('修改失败','message/update');
+        }
     }
 
     /**
@@ -80,6 +110,15 @@ class Message extends Controller
      */
     public function delete($id)
     {
-        //
+        $where=[
+            ['message_id','=',$id],//用户的id
+            ['is_del','=',1]//没有被删除
+        ];
+        $res = MessageModel::where($where)->update(['is_del'=>2]);
+        if($res){
+            $this->success('删除成功','message/index');
+        }else{
+            $this->error('删除失败','message/index');
+        }
     }
 }
