@@ -10,27 +10,51 @@
     <tr>
         <th>题库id</th>
         <th>题标题</th>
+        <th>题类型</th>
         <th>题分类</th>
         <th>题内容</th>
         <th>操作</th>
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>1</td>
-        <td>储赢</td>
-        <td>题分类</td>
-        <td>题内容</td>
+    {foreach $bank_info as $k=>$v}
+    <tr bank_id="{$v->bank_id}">
+        <td>{$v.bank_id}</td>
+        <td>{$v.bank_title}</td>
         <td>
-            <button type="button" class="layui-btn layui-btn-normal">删除</button>
+            {$v.bank_type==1?"选择题":"问答题"}
+        </td>
+        <td>{$v.cla_name}</td>
+        <td>{$v.bank_content}</td>
+        <td>
+            <button type="button" class="layui-btn layui-btn-normal delete">删除</button>
             <button type="button" class="layui-btn layui-btn-normal edit">修改</button>
         </td>
     </tr>
+    {/foreach}
     </tbody>
 </table>
 <script>
+    $(document).on("click",".delete",function(){
+        var bank_id=$(this).parents("tr").attr("bank_id");
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            data:{bank_id:bank_id},
+            url:"delete",
+            success:function(res){
+                if(res.code==200){
+                    layer.msg(res.msg);
+                    location.href="index"
+                }else{
+                    layer.alert(res.msg);
+                }
+            }
+        })
+    })
     $(document).on("click",".edit",function(){
-        location.href="/index/question/edit?id=1";
+        var bank_id=$(this).parents("tr").attr("bank_id");
+        location.href="/index/question/edit?bank_id="+bank_id;
     })
 </script>
 {/block}

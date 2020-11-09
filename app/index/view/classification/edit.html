@@ -1,17 +1,38 @@
 {extend name="public/common"}
 {block name="body"}
-<form  method="post" class="layui-form">
+<table class="layui-form">
     <div class="layui-form-item">
         <label class="layui-form-label">题库分类名</label>
         <div class="layui-input-block">
-            <input type="text" name="title" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+            <input type="hidden" name="cla_id" value="{$edit_info['cla_id']}">
+            <input type="text" name="cla_name" value="{$edit_info['cla_name']}" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
         </div>
     </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button class="layui-btn btn" lay-submit lay-filter="formDemo">立即修改</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </div>
-</form>
+</table>
+<script>
+    $(document).on("click",".btn",function(){
+        var cla_id=$("input[name='cla_id']").val()
+        var cla_name=$("input[name='cla_name']").val();
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            data:{cla_name:cla_name,cla_id:cla_id},
+            url:"update",
+            success:function(res){
+                if(res.code==200){
+                    layer.msg(res.msg)
+                    location.href="index";
+                }else{
+                    layer.alert(res.msg)
+                }
+            }
+        })
+    })
+</script>
 {/block}
