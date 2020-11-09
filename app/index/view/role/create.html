@@ -4,15 +4,37 @@
     <div class="layui-form-item">
         <label class="layui-form-label">角色名称</label>
         <div class="layui-input-block">
-            <input type="text" name="title" required  lay-verify="required" placeholder="请输入角色名称" autocomplete="off" class="layui-input">
+            <input type="text" name="role" required  lay-verify="required"id="role_name" placeholder="请输入角色名称" autocomplete="off" class="layui-input">
         </div>
     </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button class="layui-btn" id="but" lay-submit lay-filter="formDemo">立即提交</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </div>
 </form>
+<script>
+    $(function(){
+        $('#but').bind('click',function(){
+            var role_name=$("#role_name").val();
+
+            $.ajax({
+                url:"/index/role/create",
+                type:'post',
+                dataType:'json',
+                data:{'role_name':role_name},
+                success:function(res){
+                    if(res.error==200){
+                        location.href="/index/role/index";
+                    }else{
+                        layer.alert(res.msg);
+                    }
+
+                }
+            })
+        });
+    })
+</script>
 {/block}

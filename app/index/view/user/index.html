@@ -1,5 +1,6 @@
 {extend name="public/common"}
 {block name="body"}
+<div id="div_list">
 <table class="layui-table">
     <colgroup>
         <col width="150">
@@ -24,16 +25,58 @@
             <a href="#" class="layui-bg-green">权限</a>
         </td>
         <td>
-            <button type="button" class="layui-btn layui-btn-normal">删除</button>
-            <button type="button" class="layui-btn layui-btn-normal edit" >修改</button>
+            <button type="button" class="layui-btn layui-btn-normal del" del_id="{$v.admin_id}">删除</button>
+           <a href="{:url('/index/user/edit','id='.$v['admin_id'])}">
+               <button type="button" class="layui-btn layui-btn-normal edit" >修改</button>
+           </a>
         </td>
     </tr>
     {/foreach}
     </tbody>
 </table>
+    {$pagi|raw}
+</div>
 <script>
-    $(document).on("click",".edit",function(){
-        location.href="/index/user/edit?id=1";
+    $(document).ready(function(){
+        //分页
+        $('#div_list').on('click','.pagination a',function(){
+            // alert('www');
+            var url=$(this).prop('href');
+            $.ajax({
+                url:url,
+                dataType:'text',
+                data:{},
+                type:'get',
+                success:function(res){
+                    $('#div_list').html(res)
+                }
+            })
+            return false;
+        })
+        //删
+        $('#div_list').on('click','.del',function(){
+
+            var _this=$(this);
+            var id=_this.attr('del_id');
+            if(id==''){
+                return false;
+            }
+            $.ajax({
+                url:"{:url('/index/user/delete')}",
+                dataType:'json',
+                data:{'id':id},
+                type:'get',
+                success:function(res){
+                    if(res.error==200){
+                        _this.parents('tr').remove();
+                    }else{
+                        layer.alert(res.msg);
+                    }
+                }
+            })
+            return false;
+
+        })
     })
 </script>
 {/block}
