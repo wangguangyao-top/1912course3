@@ -26,7 +26,7 @@ class Lect extends Controller
      */
     public function create()
     {
-        
+
         return view("index@lect/create");
     }
 
