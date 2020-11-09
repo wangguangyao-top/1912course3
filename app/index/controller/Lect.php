@@ -26,6 +26,7 @@ class Lect extends Controller
      */
     public function create()
     {
+        
         return view("index@lect/create");
     }
 
@@ -38,18 +39,24 @@ class Lect extends Controller
     public function save(Request $request)
     {
         $lect_name = $request->post('lect_name');
-        $lect_image = $request->post('lect_image');
         $cate_id = $request->post('cate_id');
         $lect_resume = $request->post('lect_resume');
         $lect_style = $request->post('lect_style');
         $data = [
             'lect_name'=>$lect_name,
-            'lect_image'=>$lect_image,
             'cate_id'=>$cate_id,
             'lect_resume'=>$lect_resume,
             'lect_style'=>$lect_style,
             'add_time'=>time(),
         ];
+        $img=Request()->file('lect_image');
+        //文件上传
+        if($_FILES['lect_image']['error']==0){
+            $img=$this->uploads($img);
+            $data['lect_image']=$img;
+        }
+        //文件上传
+        //dump($data);die;
         $res = LectModel::insert($data);
         if($res){
             $this->success("添加成功","lect/index");
@@ -58,26 +65,16 @@ class Lect extends Controller
         }
     }
 
-    public function upload(){
-        //	获取表单上传文件	例如上传了001.jpg
-        $file = request()->file('image');
-        //	移动到框架应用根目录/uploads/	目录下
-        $info = $file->move(	'../uploads');
+    public function uploads($files){
+        //$files=request()->file($file);
+        $info=$files->move('./uploads');
         if($info){
-            //	成功上传后	获取上传信息
-            ////	输出	jpg
-            echo	$info->getExtension();
-            //	输出	20160820/42a79759f284b767dfcb2a0197904287.jpg
-            echo	$info->getSaveName();
-            //	输出	42a79759f284b767dfcb2a0197904287.jpg
-            echo	$info->getFilename();
+            return $info->getSaveName();
         }else{
-            //	上传失败获取错误信息
-            echo	$file->getError();
-            }
+            return false;
+        }
+
     }
-
-
 
         /**
      * 显示指定的资源
@@ -112,18 +109,21 @@ class Lect extends Controller
     public function update(Request $request, $id)
     {
         $lect_name = $request->post('lect_name');
-        $lect_image = $request->post('lect_image');
         $cate_id = $request->post('cate_id');
         $lect_resume = $request->post('lect_resume');
         $lect_style = $request->post('lect_style');
         $data = [
             'lect_name'=>$lect_name,
-            'lect_image'=>$lect_image,
             'cate_id'=>$cate_id,
             'lect_resume'=>$lect_resume,
             'lect_style'=>$lect_style,
             'add_time'=>time(),
         ];
+        $img=Request()->file('lect_image');
+        if($_FILES['lect_image']['error']==0){
+            $img=$this->uploads($img);
+            $data['lect_image']=$img;
+        }
         $res = LectModel::where('lect_id',$id)->update($data);
         //print_r($res);die;
         if($res){

@@ -1,6 +1,6 @@
 {extend name="public/common"}
 {block name="body"}
-<form  method="post" class="layui-form" action="update?id={$data.lect_id}">
+<form  method="post" class="layui-form" action="update?id={$data.lect_id}" enctype="multipart/form-data">
     <div class="layui-form-item">
         <label class="layui-form-label">讲师名称</label>
         <div class="layui-input-block">
@@ -10,7 +10,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">讲师照片</label>
         <div class="layui-input-block">
-            <input type="file" name="lect_image" required  lay-verify="required" value="{$data.lect_image}" autocomplete="off" class="layui-input">
+            <input type="file" name="lect_image" required  lay-verify="required"  autocomplete="off" class="layui-input">
+            <img src="/uploads/{$data.lect_image}" width="35" height="30">
         </div>
     </div>
     <div class="layui-form-item">
