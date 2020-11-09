@@ -24,7 +24,11 @@ class Course extends Controller
      */
     public function create()
     {
-        return view("index@course/create");
+        $CategoryModel=new CategoryModel;
+        $data=$CategoryModel->select();
+        $CateInfo=$this->CateInfo($data);
+        $this->assign("CateInfo",$CateInfo);
+        return view("course/create");
     }
 
     /**
@@ -81,5 +85,27 @@ class Course extends Controller
     public function delete($id)
     {
         //
+    }
+    //无限极分类
+    function CateInfo($data,$pid=0,$level=1){
+        static $info=[];
+        foreach($data as $k=>$v){
+            if($v['p_id']==$pid){
+                $v['level']=$level;
+                $info[]=$v;
+                $this->CateInfo($data,$v['cate_id'],$v['level']+1);
+            }
+        }
+        return $info;
+    }
+    /**失败*/
+    function fail($font){
+        $arr=["code"=>2,"font"=>$font];
+        echo json_encode($arr);die;
+    }
+    /**成功*/
+    function successly($font=''){
+        $arr=["code"=>1,"font"=>$font];
+        echo json_encode($arr);die;
     }
 }
