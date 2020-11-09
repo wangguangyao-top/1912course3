@@ -4,6 +4,8 @@ namespace app\index\controller;
 
 use think\Controller;
 use think\Request;
+use app\index\model\RbacUser;
+use think\Db;
 
 class User extends Controller
 {
@@ -14,7 +16,9 @@ class User extends Controller
      */
     public function index()
     {
-        return view("index@user/index");
+        $data=RbacUser::select();
+//        $this->assign('data',$data);
+        return view("index@user/index",['data'=>$data]);
     }
 
     /**
@@ -22,8 +26,27 @@ class User extends Controller
      *
      * @return \think\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        if(Request()->isAjax()){
+            $admin_name=$request->post("admin_name");
+            $pwd=$request->post('pwd');
+            $data=[
+                'admin_name'=>$admin_name,
+                'password'=>$pwd,
+                'reg_time'=>time(),
+            ];
+
+            $res=RbacUser::insert($data);
+
+            if($res){
+                echo json_encode(['error'=>200,'msg'=>'OK']);
+                die;
+            }else{
+                echo json_encode(['error'=>100001,'msg'=>'NO']);
+                die;
+            }
+        }
         return view("index@user/create");
     }
 

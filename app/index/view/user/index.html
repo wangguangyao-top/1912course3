@@ -15,9 +15,10 @@
     </tr>
     </thead>
     <tbody>
+    {foreach $data as $v}
     <tr>
-        <td>1</td>
-        <td>储赢</td>
+        <td>{$v.admin_id}</td>
+        <td>{$v.admin_name}</td>
         <td>
             <a href="#" class="layui-bg-orange">角色</a>|
             <a href="#" class="layui-bg-green">权限</a>
@@ -27,6 +28,7 @@
             <button type="button" class="layui-btn layui-btn-normal edit" >修改</button>
         </td>
     </tr>
+    {/foreach}
     </tbody>
 </table>
 <script>
