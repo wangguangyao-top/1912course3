@@ -5,7 +5,7 @@ namespace app\index\controller;
 use think\Controller;
 use think\Request;
 
-class Answer extends Controller
+class Issue extends Controller
 {
     /**
      * 显示资源列表
