@@ -1,0 +1,36 @@
+{extend name="public/common"}
+{block name="body"}
+<table class="layui-table">
+    <colgroup>
+        <col width="150">
+        <col width="200">
+        <col>
+    </colgroup>
+    <thead>
+    <tr>
+        <th>权限id</th>
+        <th>权限名称</th>
+        <th>权限路径</th>
+        <th>父级ID</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>1</td>
+        <td>储赢</td>
+        <td>储赢</td>
+        <td>储赢</td>
+        <td>
+            <button type="button" class="layui-btn layui-btn-normal">删除</button>
+            <button type="button" class="layui-btn layui-btn-normal edit" >修改</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<script>
+    $(document).on("click",".edit",function(){
+        location.href="/index/based/edit?id=1";
+    })
+</script>
+{/block}

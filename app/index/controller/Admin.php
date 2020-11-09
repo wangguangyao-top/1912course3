@@ -12,8 +12,7 @@ class Admin
     {
         return 'hello,' . $name;
     }
-    public function abc(){
-        echo 123;
-        return view('index@Index/index');
+    public function home(){
+        return view("index@Admin/home");
     }
 }
