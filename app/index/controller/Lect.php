@@ -5,6 +5,7 @@ namespace app\index\controller;
 use think\Controller;
 use think\Request;
 use app\index\model\LectModel;
+use app\index\model\Category;
 
 class Lect extends Controller
 {
@@ -15,7 +16,9 @@ class Lect extends Controller
      */
     public function index()
     {
-        $data = LectModel::where('is_del',1)->select();
+        //$course = Category::select();
+        $data = LectModel::leftjoin('course_category','course_lect.cate_id=course_category.cate_id')->where('course_lect.is_del',1)->select();
+        //dump($data);die;
         return view("index@lect/index",['data'=>$data]);
     }
 
@@ -26,8 +29,9 @@ class Lect extends Controller
      */
     public function create()
     {
+        $course = Category::select();
 
-        return view("index@lect/create");
+        return view("index@lect/create",['course'=>$course]);
     }
 
     /**
@@ -96,7 +100,8 @@ class Lect extends Controller
     public function edit($id)
     {
         $data = LectModel::where('lect_id',$id)->find();
-        return view("index@lect/edit",['data'=>$data]);
+        $cate = Category::select();
+        return view("index@lect/edit",['data'=>$data,'cate'=>$cate]);
     }
 
     /**

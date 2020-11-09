@@ -17,12 +17,9 @@
         <label class="layui-form-label">课程分类</label>
         <div class="layui-input-block">
             <select name="cate_id" lay-verify="required">
-                <option value=""></option>
-                <option value="1">redis</option>
-                <option value="2">mysql</option>
-                <option value="3">linux</option>
-                <option value="4">css</option>
-                <option value="5">php</option>
+                {foreach $course as $k=>$v}
+                <option value="{$v.cate_id}">{$v.cate_name}</option>
+                {/foreach}
             </select>
         </div>
     </div>
