@@ -15,13 +15,20 @@ class Course extends Controller
      *
      * @return \think\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $data=input();
+        $where=[];
+        if(!empty($data['course_name'])){
+            $where[]=["course_name","like","%".$data['course_name']."%"];
+        }
+
         $course_info=CourseModel::
         leftjoin("course_category","course_course.cate_id=course_category.cate_id")
         ->leftjoin("course_lect","course_course.lect_id=course_lect.lect_id")
         ->where(["course_course.is_del"=>1])
-        ->select();
+        ->where($where)
+        ->paginate(4);
         return view("index@course/index",compact("course_info"));
     }
 
@@ -178,7 +185,7 @@ class Course extends Controller
         }
         return $info;
     }
-    //父级id无限极分类
+    //目录无限极分类
     function CateInfo2($data,$pid=0,$level=1){
         static $info=[];
         foreach($data as $k=>$v){
