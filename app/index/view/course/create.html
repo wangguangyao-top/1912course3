@@ -8,12 +8,12 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">父级id</label>
+        <label class="layui-form-label">目录分类</label>
         <div class="layui-input-block">
-            <select name="p_id" lay-verify="required" id="p_id">
+            <select name="catalog_id" lay-verify="required" id="catalog_id">
                 <option value="0">{:str_repeat("&nbsp;&nbsp;&nbsp;",3)}顶级分类</option>
                 {volist name="$CateInfo2" id="v"}
-                <option value="{$v.course_id}">{:str_repeat("&nbsp;&nbsp;&nbsp;",$v.level*3)}{$v.course_name}</option>
+                <option value="{$v.catalog_id}">{:str_repeat("&nbsp;&nbsp;&nbsp;",$v.level*3)}{$v.catalog_name}</option>
                 {/volist}
             </select>
         </div>
@@ -67,18 +67,19 @@
 </form>
 <script>
     $(document).on('click','#button',function(){
-        var cate_name = $('input[name="cate_name"]').val();
-        var p_id = $("#p_id").val();
+        var course_name = $('input[name="course_name"]').val();
+        var catalog_id = $("#catalog_id").val();
         var cate_id = $("#cate_id").val();
         var lect_id = $("#lect_id").val();
         var course_image = $("#course_image").val();
         var course_desc = $("#course_desc").val();
         var course_notice = $("#course_notice").val()
+
         $.ajax({
             type:"post",
             dataType:"json",
             url:"/index/course/save",
-            data:{cate_name:cate_name,p_id:p_id,cate_id:cate_id,lect_id:lect_id,course_image:course_image,course_desc:course_desc,course_notice:course_notice},
+            data:{course_name:course_name,catalog_id:catalog_id,cate_id:cate_id,lect_id:lect_id,course_image:course_image,course_desc:course_desc,course_notice:course_notice},
             success:function(res){
                 if(res.code==1){
                     layer.msg(res.msg)

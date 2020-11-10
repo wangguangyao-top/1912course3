@@ -7,6 +7,7 @@ use think\Request;
 use app\index\model\Category as CategoryModel;
 use app\index\model\Course as CourseModel;
 use app\index\model\LectModel;
+use app\index\model\CatalogModel;
 
 class Course extends Controller
 {
@@ -26,9 +27,10 @@ class Course extends Controller
         $course_info=CourseModel::
         leftjoin("course_category","course_course.cate_id=course_category.cate_id")
         ->leftjoin("course_lect","course_course.lect_id=course_lect.lect_id")
+        ->leftjoin("course_catalog","course_course.catalog_id=course_catalog.catalog_id")
         ->where(["course_course.is_del"=>1])
         ->where($where)
-        ->paginate(4);
+        ->paginate(4,false,['requry'=>input()]);
         return view("index@course/index",compact("course_info"));
     }
 
@@ -44,9 +46,9 @@ class Course extends Controller
         $data1=$CategoryModel->select();
         $CateInfo1=$this->CateInfo1($data1);
         $this->assign("CateInfo1",$CateInfo1);
-        //父级id
-        $CourseModel=new CourseModel;
-        $data2=$CourseModel->select();
+        //目录分类
+        $CatalogModel=new CatalogModel;
+        $data2=$CatalogModel->select();
 //        print_r($data2);echo "<hr>";
         $CateInfo2=$this->CateInfo2($data2);
         $this->assign("CateInfo2",$CateInfo2);
@@ -69,12 +71,13 @@ class Course extends Controller
         $CourseModel=new CourseModel;
         $data=$request->post();
 
-        $img=Request()->file('course_image');
-        if($_FILES['course_image']['error']==0){
-            $img=$this->uploads($img);
-            $data['course_image']=$img;
-        }
+//        $img=Request()->file('course_image');
+//        if($_FILES['course_image']['error']==0){
+//            $img=$this->uploads($img);
+//            $data['course_image']=$img;
+//        }
         $data['add_time']=time();
+//        print_r($data);die;
         $res=$CourseModel->save($data);
         if($res){
             $this->success("添加成功",url('/index/course/index'));
@@ -117,9 +120,9 @@ class Course extends Controller
         $data1=$CategoryModel->select();
         $CateInfo1=$this->CateInfo1($data1);
         $this->assign("CateInfo1",$CateInfo1);
-        //父级id
-        $CourseModel=new CourseModel;
-        $data2=$CourseModel->select();
+        //目录分类
+        $CatalogModel=new CatalogModel;
+        $data2=$CatalogModel->select();
 //        print_r($data2);echo "<hr>";
         $CateInfo2=$this->CateInfo2($data2);
         $this->assign("CateInfo2",$CateInfo2);
@@ -145,11 +148,11 @@ class Course extends Controller
         $course_id=$request->post("course_id");
         $data=$request->post();
 
-        $img=Request()->file('course_image');
-        if($_FILES['course_image']['error']==0){
-            $img=$this->uploads($img);
-            $data['course_image']=$img;
-        }
+//        $img=Request()->file('course_image');
+//        if($_FILES['course_image']['error']==0){
+//            $img=$this->uploads($img);
+//            $data['course_image']=$img;
+//        }
         $res=CourseModel::where(["course_id"=>$course_id])->update($data);
         if($res){
             $this->success("修改成功",url('/index/course/index'));
@@ -192,7 +195,7 @@ class Course extends Controller
             if($v['p_id']==$pid){
                 $v['level']=$level;
                 $info[]=$v;
-                $this->CateInfo2($data,$v['course_id'],$v['level']+1);
+                $this->CateInfo2($data,$v['catalog_id'],$v['level']+1);
             }
         }
         return $info;

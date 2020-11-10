@@ -21,7 +21,7 @@
         <th>课程id</th>
         <th>课程名称</th>
         <th>课程分类</th>
-        <th>父级分类</th>
+        <th>目录分类</th>
         <th>讲师选择</th>
         <th>课程图片</th>
         <th>课程简介</th>
@@ -39,7 +39,7 @@
         <td field="cate_name">
             {$v.cate_name}
         </td>
-        <td>{$v.p_id}</td>
+        <td>{$v.catalog_name}</td>
         <td>{$v.lect_name}</td>
         <td><img src="/uploads/{$v.course_image}" width="35" height="30"></td>
         <td>{$v.course_desc}</td>
