@@ -1,0 +1,67 @@
+role{extend name="public/common"}
+{block name="body"}
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">用户名称</label>
+        <div class="layui-input-block" style="line-height:36px" >
+          <b id="admin_name"> {$admin.admin_name}</b>
+            <input type="hidden" name="id" id="admin_id" value="{$admin.admin_id}">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色名称</label>
+        <div class="layui-input-block">
+            {foreach $role as $v}
+            {if  in_array($v.role_id,$role_ids) }
+                <input type="checkbox" class="role" value="{$v.role_id}" title="{$v.role_name}" checked>
+            {else if}
+                <input type="checkbox" class="role" value="{$v.role_id}" title="{$v.role_name}">
+            {/if}
+            {/foreach}
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" id="but" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script>
+    $(function(){
+        $('#but').bind('click',function(){
+            var admin_id=$("#admin_id").val();
+//alert(admin_id)
+                var str='';
+                $(".role").each(function(){
+                    if($(this).prop("checked")==true){
+                        str=str+$(this).val()+",";
+                    }
+                })
+                var role_id=str.substr(0,str.length-1);
+//                alert(role_id);
+                if(role_id=='')
+                    return false;
+
+            $.ajax({
+                url:"/index/user/userRole",
+                type:'post',
+                dataType:'json',
+                data:{'admin_id':admin_id,'role_id':role_id},
+                success:function(res){
+                    if(res.error==200){
+                        layer.alert(res.msg);
+                        location.href="/index/user/index";
+                    }else{
+                        layer.alert(res.msg);
+                    }
+
+                }
+            })
+            return false;
+        });
+    })
+</script>
+{/block}

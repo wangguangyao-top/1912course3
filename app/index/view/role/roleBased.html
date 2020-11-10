@@ -1,0 +1,68 @@
+role{extend name="public/common"}
+{block name="body"}
+<form class="layui-form">
+    <div class="layui-form-item">
+        <label class="layui-form-label">角色名称</label>
+        <div class="layui-input-block" style="line-height:36px" >
+            <b id="role_name"> {$role.role_name}</b>
+            <input type="hidden" name="id" id="role_id" value="{$role.role_id}">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">权限名称</label>
+        <div class="layui-input-block">
+            {foreach $based as $v}
+            {if  in_array($v.based_id,$based_ids) }
+            <input type="checkbox" class="based" value="{$v.based_id}" title="{$v.based_name}" checked>
+            {else if}
+            <input type="checkbox" class="based" value="{$v.based_id}" title="{$v.based_name}">
+            {/if}
+            {/foreach}
+        </div>
+    </div>
+
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn" id="but" lay-submit lay-filter="formDemo">立即提交</button>
+            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+        </div>
+    </div>
+</form>
+<script>
+    $(function(){
+        $('#but').bind('click',function(){
+            var role_id=$("#role_id").val();
+//alert(role_id)
+            var str='';
+            $(".based").each(function(){
+                if($(this).prop("checked")==true){
+                    str=str+$(this).val()+",";
+                }
+            })
+            var based_id=str.substr(0,str.length-1);
+//                alert(based_id);
+            if(based_id=='')
+                return false;
+
+            $.ajax({
+                url:"/index/role/roleBased",
+                type:'post',
+                dataType:'json',
+                data:{'role_id':role_id,'based_id':based_id},
+                success:function(res){
+                    if(res.error==200){
+                        layer.alert(res.msg);
+                        location.href="/index/role/index";
+                    }else{
+                        layer.alert(res.msg);
+                    }
+
+                }
+            })
+            return false;
+        });
+    })
+</script>
+{/block}

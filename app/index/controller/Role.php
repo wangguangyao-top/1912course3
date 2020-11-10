@@ -2,9 +2,11 @@
 
 namespace app\index\controller;
 
+use app\index\model\RbacBased;
 use think\Controller;
 use think\Request;
 use app\index\model\RbacRole;
+use app\index\model\RbacRoleBased;
 
 class Role extends Controller
 {
@@ -153,5 +155,60 @@ class Role extends Controller
         }
         echo json_encode(['error'=>100001,'msg'=>'删除失败']);
         exit;
+    }
+
+    /**
+     * 赋予权限
+     *
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function roleBased(Request $request)
+    {
+        if(Request()->isAjax()){
+            $role_id=$request->post('role_id');
+            $based_id=$request->post('based_id');
+
+            if(empty($role_id)||empty($based_id)){
+                echo json_encode(['error'=>100003,'msg'=>'参数缺失']);
+                exit;
+            }
+            $data=[
+                'role_id'=>$role_id,
+                'based_id'=>$based_id
+            ];
+            $roleBased=RbacRoleBased::where('role_id',$role_id)->find();
+            if($roleBased){
+                $res=RbacRoleBased::where('role_id',$role_id)->update($data);
+                if($res){
+                    echo json_encode(['error'=>200,'msg'=>'修改成功']);
+                    exit;
+                }
+                echo json_encode(['error'=>100001,'msg'=>'修改失败']);
+                exit;
+            }else{
+                $res=RbacRoleBased::create($data);
+                if($res){
+                    echo json_encode(['error'=>200,'msg'=>'添加成功']);
+                    exit;
+                }
+                echo json_encode(['error'=>100001,'msg'=>'添加失败']);
+                exit;
+            }
+        }
+        //
+        $role_id=input('id');
+        //查询角色信息
+        $role=Rbacrole::where('role_id',$role_id)->find();
+        $this->assign('role',$role);
+        //查询关联表中的权限id
+        $roleBased=RbacRoleBased::where('role_id',$role_id)->find();
+        $based_ids=$roleBased['based_id'];
+        $based_ids=explode(',',$based_ids);
+        $this->assign('based_ids',$based_ids);
+        //查询所有的权限
+        $based=RbacBased::where('is_del',1)->select();
+        $this->assign('based',$based);
+        return view('role/roleBased');
     }
 }

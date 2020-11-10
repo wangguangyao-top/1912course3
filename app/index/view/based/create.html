@@ -1,6 +1,6 @@
 {extend name="public/common"}
 {block name="body"}
-<form class="layui-form" action="">
+<form class="layui-form">
 
     <div class="layui-form-item">
         <label class="layui-form-label">权限名称</label>
@@ -51,13 +51,14 @@
                 data:{'based_name':based_name,'url':url,'pid':pid},
                 success:function(res){
                     if(res.error==200){
+                        layer.alert(res.msg);
                         location.href="/index/based/index";
                     }else{
                         layer.alert(res.msg);
                     }
-
                 }
             })
+            return false;
         });
     })
 </script>
