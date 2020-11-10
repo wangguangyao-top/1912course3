@@ -1,5 +1,16 @@
 {extend name="public/common"}
 {block name="body"}
+<form class="layui-form">
+    <div class="layui-form-item">
+        <div class="layui-input-inline">
+            <input type="text" name="catalog_name" required lay-verify="required" placeholder="请输入目录名称" autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-input-block">
+            <button class="layui-btn btn" lay-submit lay-filter="formDemo">搜索</button>
+        </div>
+    </div>
+</form>
+
 <table class="layui-table">
     <colgroup>
         <col width="150">
@@ -30,6 +41,7 @@
     {/foreach}
     </tbody>
 </table>
+{$info|raw}
 <script>
     $(document).on("click",".del",function(){
         var catalog_id=$(this).parents("tr").attr('catalog_id');
