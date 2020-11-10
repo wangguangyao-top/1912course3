@@ -1,42 +1,65 @@
 {extend name="public/common"}
 {block name="body"}
 <form class="layui-form" action="">
-    <div class="layui-form-item">
-        <label class="layui-form-label">权限名称</label>
-        <div class="layui-input-block">
-            <input type="text" name="title" required  lay-verify="required" placeholder="请输入权限名称" autocomplete="off" class="layui-input">
-        </div>
-    </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">权限名称</label>
         <div class="layui-input-block">
-            <input type="file" name="title" required  lay-verify="required" placeholder="请输入权限名称" autocomplete="off" class="layui-input">
+            <input type="text" name="based_name" id="based_name" value="{$data.based_name}" required  lay-verify="required" placeholder="请输入权限名称" autocomplete="off" class="layui-input">
         </div>
     </div>
 
     <div class="layui-form-item">
         <label class="layui-form-label">权限路径</label>
         <div class="layui-input-block">
-            <input type="text" name="title" required  lay-verify="required" placeholder="请输入权限路径" autocomplete="off" class="layui-input">
-        </div>
+            <input type="text" name="url" id="url" value="{$data.url}" required  lay-verify="required" placeholder="请输入权限路径" autocomplete="off" class="layui-input">
+        </div><input type="hidden" name="id" id="based_id" value="{$data.based_id}">
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">父级ID</label>
+        <label class="layui-form-label">基于权限ID</label>
         <div class="layui-input-block">
-            <select name="city" lay-verify="required">
-                <option value=""></option>
-                <option value="0">北京</option>
-                <option value="1">上海</option>
+            <select name="pid" lay-verify="required" id="pid">
+                <option value="0">-请选择-</option>
+                {foreach $date as $b}
+                <option value="{$b.pid}" {$data.pid==$b.pid?'selected':''}>{$b.based_name}</option>
+                {/foreach}
             </select>
         </div>
     </div>
 
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+            <button class="layui-btn" lay-submit lay-filter="formDemo" id="but">立即提交</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </div>
 </form>
+<script>
+    $(function(){
+        $('#but').bind('click',function(){
+            var based_name=$("#based_name").val();
+            var based_id=$("#based_id").val();
+            var url=$("#url").val();
+            var pid=$("#pid").val();
+//            alert(based_name);
+//            alert(url);
+//           alert(pid);
+
+            $.ajax({
+                url:"/index/based/update",
+                type:'post',
+                dataType:'json',
+                data:{'based_name':based_name,'url':url,'pid':pid,'based_id':based_id},
+                success:function(res){
+                    if(res.error==200){
+                        location.href="/index/based/index";
+                    }else{
+                        layer.alert(res.msg);
+                    }
+
+                }
+            })
+        });
+    })
+</script>
 {/block}

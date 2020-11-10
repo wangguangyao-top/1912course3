@@ -14,19 +14,39 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>1</td>
-        <td>呵呵</td>
+    {foreach $cla_info as $k=>$v}
+    <tr cla_id={$v.cla_id}>
+        <td>{$v.cla_id}</td>
+        <td>{$v.cla_name}</td>
         <td>
-            <button type="button" class="layui-btn layui-btn-normal">删除</button>
+            <button type="button" class="layui-btn layui-btn-normal del">删除</button>
             <button type="button" class="layui-btn layui-btn-normal edit">修改</button>
         </td>
     </tr>
+    {/foreach}
     </tbody>
 </table>
 <script>
+    $(document).on("click",".del",function(){
+        var cla_id=$(this).parents('tr').attr('cla_id');
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"delete",
+            data:{cla_id:cla_id},
+            success:function(res){
+                if(res.code=200){
+                    layer.msg(res.msg);
+                    location.href="index";
+                }else{
+                    layer.alert(res.msg)
+                }
+            }
+        })
+    })
     $(document).on("click",".edit",function(){
-        location.href="/index/classification/edit?id=1";
+        var cla_id=$(this).parents("tr").attr("cla_id")
+        location.href="/index/classification/edit?cla_id="+cla_id;
     })
 </script>
 {/block}
