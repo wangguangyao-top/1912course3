@@ -1,0 +1,50 @@
+{extend name="public/common"}
+{block name="body"}
+<div id="div_list">
+    <table class="layui-table">
+        <colgroup>
+            <col width="150">
+            <col width="200">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th>角色名称</th>
+            <th>权限名称</th>
+
+        </tr>
+        </thead>
+        <tbody>
+{foreach $role_names as $v}
+        <tr>
+            <td>{$v}</td>
+            <td>
+
+            </td>
+        </tr>
+{/foreach}
+        </tbody>
+    </table>
+
+</div>
+<!--<script>-->
+<!--//    $(document).ready(function(){-->
+<!--//        //分页-->
+<!--//        $('#div_list').on('click','.pagination a',function(){-->
+<!--//            // alert('www');-->
+<!--//            var url=$(this).prop('href');-->
+<!--//            $.ajax({-->
+<!--//                url:url,-->
+<!--//                dataType:'text',-->
+<!--//                data:{},-->
+<!--//                type:'get',-->
+<!--//                success:function(res){-->
+<!--//                    $('#div_list').html(res)-->
+<!--//                }-->
+<!--//            })-->
+<!--//            return false;-->
+<!--//        })-->
+<!--//       -->
+<!--//    })-->
+<!--</script>-->
+{/block}

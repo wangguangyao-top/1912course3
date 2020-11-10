@@ -1,6 +1,6 @@
 {extend name="public/common"}
 {block name="body"}
-<form class="layui-form" action="">
+<form class="layui-form">
     <div class="layui-form-item">
         <label class="layui-form-label">用户名称</label>
         <div class="layui-input-block">
@@ -47,6 +47,7 @@
                 data:{'admin_name':admin_name,'pwd':pwd},
                 success:function(res){
                     if(res.error==200){
+                        layer.alert(res.msg);
                         location.href="/index/user/index";
                     }else{
                         layer.alert(res.msg);
@@ -54,6 +55,7 @@
 
                 }
             })
+            return false;
         });
     })
 </script>
