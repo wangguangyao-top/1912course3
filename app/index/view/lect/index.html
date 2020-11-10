@@ -18,23 +18,30 @@
     </tr>
     </thead>
     <tbody>
+    {foreach $data as $k=>$v}
     <tr>
-        <td>1</td>
-        <td>储赢</td>
-        <td>没有照片</td>
-        <td>讲师分类</td>
-        <td>讲师简介</td>
-        <td>授课风格</td>
+        <td>{$v.lect_id}</td>
+        <td>{$v.lect_name}</td>
+        <td><img src="/uploads/{$v.lect_image}" width="100" height="100"></td>
+        <td>{$v.cate_name}</td>
+        <td>{$v.lect_resume}</td>
+        <td>{$v.lect_style}</td>
         <td>
-            <button type="button" class="layui-btn layui-btn-normal">删除</button>
-            <button type="button" class="layui-btn layui-btn-normal edit">修改</button>
+            <button type="button" class="layui-btn layui-btn-normal edit" value="{$v.lect_id}">修改</button>
+            <button type="button" class="layui-btn layui-btn-normal del" value="{$v.lect_id}">删除</button>
         </td>
     </tr>
+    {/foreach}
     </tbody>
 </table>
 <script>
     $(document).on("click",".edit",function(){
-        location.href="/index/lect/edit?id=1";
+        var id =$(this).val();
+        location.href="/index/lect/edit?id="+id;
+    })
+    $(document).on("click",".del",function(){
+        var id =$(this).val();
+        location.href="/index/lect/delete?id="+id;
     })
 </script>
 {/block}

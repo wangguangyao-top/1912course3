@@ -4,6 +4,9 @@ namespace app\index\controller;
 
 use think\Controller;
 use think\Request;
+use app\index\model\Category as CategoryModel;
+use app\index\model\Course as CourseModel;
+use app\index\model\LectModel;
 
 class Course extends Controller
 {
@@ -14,7 +17,12 @@ class Course extends Controller
      */
     public function index()
     {
-        return view("index@course/index");
+        $course_info=CourseModel::
+        leftjoin("course_category","course_course.cate_id=course_category.cate_id")
+        ->leftjoin("course_lect","course_course.lect_id=course_lect.lect_id")
+        ->where(["course_course.is_del"=>1])
+        ->select();
+        return view("index@course/index",compact("course_info"));
     }
 
     /**
@@ -24,6 +32,22 @@ class Course extends Controller
      */
     public function create()
     {
+        //课程分类
+        $CategoryModel=new CategoryModel;
+        $data1=$CategoryModel->select();
+        $CateInfo1=$this->CateInfo1($data1);
+        $this->assign("CateInfo1",$CateInfo1);
+        //父级id
+        $CourseModel=new CourseModel;
+        $data2=$CourseModel->select();
+//        print_r($data2);echo "<hr>";
+        $CateInfo2=$this->CateInfo2($data2);
+        $this->assign("CateInfo2",$CateInfo2);
+        //讲师分类
+        $LectModel=new LectModel;
+        $data3=$LectModel->select();
+        $this->assign("data3",$data3);
+
         return view("index@course/create");
     }
 
@@ -35,15 +59,40 @@ class Course extends Controller
      */
     public function save(Request $request)
     {
-        //
-    }
+        $CourseModel=new CourseModel;
+        $data=$request->post();
 
+
+        $img=Request()->file('course_image');
+        if($_FILES['course_image']['error']==0){
+            $img=$this->uploads($img);
+            $data['course_image']=$img;
+        }
+        $data['add_time']=time();
+        $res=$CourseModel->save($data);
+        if($res){
+            $this->success("添加成功",url('/index/course/index'));
+        }else{
+            $this->error("添加失败");
+        }
+    }
+    public function uploads($files){
+        //$files=request()->file($file);
+        $info=$files->move('./uploads');
+        if($info){
+            return $info->getSaveName();
+        }else{
+            return false;
+        }
+
+    }
     /**
      * 显示指定的资源
      *
      * @param  int  $id
      * @return \think\Response
      */
+
     public function read($id)
     {
         //
@@ -55,9 +104,27 @@ class Course extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function edit($id)
+    public function edit($course_id)
     {
-        return view("index@course/edit");
+        //课程分类
+        $CategoryModel=new CategoryModel;
+        $data1=$CategoryModel->select();
+        $CateInfo1=$this->CateInfo1($data1);
+        $this->assign("CateInfo1",$CateInfo1);
+        //父级id
+        $CourseModel=new CourseModel;
+        $data2=$CourseModel->select();
+//        print_r($data2);echo "<hr>";
+        $CateInfo2=$this->CateInfo2($data2);
+        $this->assign("CateInfo2",$CateInfo2);
+        //讲师分类
+        $LectModel=new LectModel;
+        $data3=$LectModel->select();
+        $this->assign("data3",$data3);
+
+
+        $course_info=CourseModel::where(["course_id"=>$course_id])->find();
+        return view("index@course/edit",compact("course_info"));
     }
 
     /**
@@ -67,9 +134,22 @@ class Course extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $course_id=$request->post("course_id");
+        $data=$request->post();
+
+        $img=Request()->file('course_image');
+        if($_FILES['course_image']['error']==0){
+            $img=$this->uploads($img);
+            $data['course_image']=$img;
+        }
+        $res=CourseModel::where(["course_id"=>$course_id])->update($data);
+        if($res){
+            $this->success("修改成功",url('/index/course/index'));
+        }else{
+            $this->success("修改失败");
+        }
     }
 
     /**
@@ -78,8 +158,48 @@ class Course extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function delete($id)
+    public function delete(Request $request,$course_id)
     {
-        //
+        $res=CourseModel::where(["course_id"=>$course_id])->update(["is_del"=>2]);
+        if($res){
+            echo json_encode(["code"=>200,"msg"=>"删除成功"]);die;
+        }else{
+            echo json_encode(["code"=>1,"msg"=>"删除失败"]);die;
+        }
+    }
+    //课程无限极分类
+    function CateInfo1($data,$pid=0,$level=1){
+        static $info=[];
+        foreach($data as $k=>$v){
+            if($v['p_id']==$pid){
+                $v['level']=$level;
+                $info[]=$v;
+                $this->CateInfo1($data,$v['cate_id'],$v['level']+1);
+            }
+        }
+        return $info;
+    }
+    //父级id无限极分类
+    function CateInfo2($data,$pid=0,$level=1){
+        static $info=[];
+        foreach($data as $k=>$v){
+            if($v['p_id']==$pid){
+                $v['level']=$level;
+                $info[]=$v;
+                $this->CateInfo2($data,$v['course_id'],$v['level']+1);
+            }
+        }
+        return $info;
+    }
+
+    /**失败*/
+    function fail($font){
+        $arr=["code"=>2,"font"=>$font];
+        echo json_encode($arr);die;
+    }
+    /**成功*/
+    function successly($font=''){
+        $arr=["code"=>1,"font"=>$font];
+        echo json_encode($arr);die;
     }
 }

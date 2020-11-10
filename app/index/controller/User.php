@@ -4,6 +4,8 @@ namespace app\index\controller;
 
 use think\Controller;
 use think\Request;
+use app\index\model\RbacUser;
+use think\Db;
 
 class User extends Controller
 {
@@ -14,6 +16,13 @@ class User extends Controller
      */
     public function index()
     {
+        $data=RbacUser::where('is_del','=',1)->paginate(2,false,['requry'=>input()]);;
+        $this->assign('data',$data);
+        $this->assign('pagi',$data->render());
+        if(Request()->isAjax()){
+            $this->view->engine->layout(false);
+            return view('index_ajax');
+        }
         return view("index@user/index");
     }
 
@@ -22,8 +31,35 @@ class User extends Controller
      *
      * @return \think\Response
      */
-    public function create()
+    public function create(Request $request)
     {
+        if(Request()->isAjax()){
+            $admin_name=empty($request->post("admin_name"))?"":$request->post("admin_name");
+            $pwd=empty($request->post('pwd'))?'':$request->post('pwd');
+            if($admin_name==''||$pwd==''){
+                echo json_encode(['error'=>100003,'msg'=>'参数缺失']);
+                die;
+            }
+            $data=[
+                'admin_name'=>$admin_name,
+                'password'=>$pwd,
+                'reg_time'=>time(),
+            ];
+            $find=RbacUser::where('admin_name','=',"$admin_name")->find();
+            if($find){
+                echo json_encode(['error'=>100002,'msg'=>'用户名已存在']);
+                die;
+            }
+            $res=RbacUser::insert($data);
+
+            if($res){
+                echo json_encode(['error'=>200,'msg'=>'OK']);
+                die;
+            }else{
+                echo json_encode(['error'=>100001,'msg'=>'NO']);
+                die;
+            }
+        }
         return view("index@user/create");
     }
 
@@ -57,6 +93,9 @@ class User extends Controller
      */
     public function edit($id)
     {
+        $admin_id=input('id');
+        $data=RbacUser::where('admin_id','=',$admin_id)->find();
+        $this->assign('data',$data);
         return view("index@user/edit");
     }
 
@@ -67,9 +106,34 @@ class User extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $admin_id=$request->post("id");
+        $admin_name=$request->post("admin_name");
+        $pwd=$request->post('pwd');
+        if($admin_name==''||$pwd==''||$admin_id==''){
+            echo json_encode(['error'=>100003,'msg'=>'参数缺失']);
+            die;
+        }
+        $find=RbacUser::where('admin_name','=',"$admin_name")->where('admin_id','<>',$admin_id)->find();
+        if($find){
+            echo json_encode(['error'=>100002,'msg'=>'权限名已存在']);
+            die;
+        }
+        $data=[
+            'admin_name'=>$admin_name,
+            'password'=>$pwd,
+            'up_time'=>time(),
+        ];
+
+        $res=RbacUser::where('admin_id',$admin_id)->update($data);
+
+        if($res){
+            echo json_encode(['error'=>200,'msg'=>'修改成功']);
+            exit;
+        }
+        echo json_encode(['error'=>100001,'msg'=>'修改失败']);
+        exit;
     }
 
     /**
@@ -78,8 +142,21 @@ class User extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function delete($id)
+    public function delete()
     {
-        //
+        $id=empty(input('id'))?0:input('id');
+        if(empty($id)){
+            echo json_encode(['error'=>100003,'msg'=>'参数缺失']);
+            exit;
+        }
+
+        $res= $res=RbacUser::where('admin_id','=',$id)->update(['is_del'=>2]);;
+        if($res){
+            echo json_encode(['error'=>200,'msg'=>'删除成功']);
+            exit;
+        }
+        echo json_encode(['error'=>100001,'msg'=>'删除失败']);
+        exit;
+
     }
 }

@@ -16,21 +16,28 @@
     </tr>
     </thead>
     <tbody>
+    {foreach $data as $v}
     <tr>
-        <td>1</td>
-        <td>储赢</td>
-        <td>热门</td>
-        <td>资讯内容</td>
+        <td>{$v.message_id}</td>
+        <td>{$v.message_title}</td>
+        <td>{$v.is_hut==1?"热门":"非热门"}</td>
+        <td>{$v.message_name}</td>
         <td>
-            <button type="button" class="layui-btn layui-btn-normal">删除</button>
-            <button type="button" class="layui-btn layui-btn-normal edit">修改</button>
+            <button type="button" class="layui-btn layui-btn-normal edit" value="{$v.message_id}">修改</button>
+            <button type="button" class="layui-btn layui-btn-normal del" value="{$v.message_id}">删除</button>
         </td>
     </tr>
+    {/foreach}
     </tbody>
 </table>
 <script>
     $(document).on("click",".edit",function(){
-        location.href="/index/message/edit?id=1";
+        var id = $(this).val();
+        location.href="/index/message/edit?id="+id;
+    })
+    $(document).on("click",".del",function(){
+        var id = $(this).val();
+        location.href="/index/message/delete?id="+id;
     })
 </script>
 {/block}

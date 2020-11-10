@@ -2,10 +2,13 @@
 
 namespace app\index\controller;
 
+use Illuminate\Support\Facades\DB;
 use think\Controller;
 use think\Request;
+use app\index\model\IssueModel;
+use app\index\model\UserModel;
 
-class Answer extends Controller
+class Issue extends Controller
 {
     /**
      * 显示资源列表
@@ -14,7 +17,10 @@ class Answer extends Controller
      */
     public function index()
     {
-        return view("index@answer/index");
+        $data = IssueModel::leftjoin("course_user",'course_issue.user_id=course_user.user_id')->where('course_issue.is_del',1)->select();
+        //$data = IssueModel::select();
+        //$user = UserModel::select();
+        return view("index@issue/index",['data'=>$data]);
     }
 
     /**
@@ -24,7 +30,7 @@ class Answer extends Controller
      */
     public function create()
     {
-        return view("index@answer/create");
+        return view("index@issue/create");
     }
 
     /**
@@ -80,6 +86,11 @@ class Answer extends Controller
      */
     public function delete($id)
     {
-        //
+        $res = IssueModel::where('issue_id',$id)->delete();
+        if($res){
+            $this->success('删除成功','issue/index');
+        }else{
+            $this->error('删除失败','issue/index');
+        }
     }
 }

@@ -4,6 +4,7 @@ namespace app\index\controller;
 
 use think\Controller;
 use think\Request;
+use app\index\model\ClassificationModel;
 
 class Classification extends Controller
 {
@@ -14,7 +15,8 @@ class Classification extends Controller
      */
     public function index()
     {
-        return view("index@classification/index");
+        $cla_info=ClassificationModel::where(["is_del"=>1])->select();
+        return view("index@classification/index",compact("cla_info"));
     }
 
     /**
@@ -35,7 +37,17 @@ class Classification extends Controller
      */
     public function save(Request $request)
     {
-        //
+        $cla_name=$request->post("cla_name");
+        $data=[
+            "cla_name"=>$cla_name,
+            "add_time"=>time()
+        ];
+        $res=ClassificationModel::insert($data);
+        if($res){
+            echo  json_encode(["code"=>"200","msg"=>"添加成功"]);die;
+        }else{
+            echo json_encode(["code"=>"1","msg"=>"添加失败"]);die;
+        }
     }
 
     /**
@@ -55,9 +67,11 @@ class Classification extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        return view("index@classification/edit");
+        $cla_id=$request->get("cla_id");
+        $edit_info=ClassificationModel::find($cla_id);
+        return view("index@classification/edit",compact("edit_info"));
     }
 
     /**
@@ -67,9 +81,19 @@ class Classification extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        $cla_id=$request->post("cla_id");
+        $cla_name=$request->post("cla_name");
+        $data=[
+            "cla_name"=>$cla_name
+        ];
+        $res=ClassificationModel::where(["cla_id"=>$cla_id])->update($data);
+        if($res){
+            echo json_encode(["code"=>200,"msg"=>"修改成功"]);die;
+        }else{
+            echo json_encode(["code"=>1,"msg"=>"修改失败"]);die;
+        }
     }
 
     /**
@@ -78,8 +102,14 @@ class Classification extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function delete($id)
+    public function delete(Request $request)
     {
-        //
+        $cla_id=$request->post("cla_id");
+        $res=ClassificationModel::where(["cla_id"=>$cla_id])->update(["is_del"=>2]);
+        if($res){
+            echo  json_encode(["code"=>"200","msg"=>"删除成功"]);die;
+        }else{
+            echo  json_encode(["code"=>"1","msg"=>"删除成功"]);die;
+        }
     }
 }

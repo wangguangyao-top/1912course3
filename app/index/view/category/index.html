@@ -10,23 +10,52 @@
     <tr>
         <th>课程分类id</th>
         <th>课程分类名称</th>
+        <th>父级id</th>
         <th>操作</th>
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>1</td>
-        <td>哈哈</td>
+    {volist name="CateInfo" id="v"}
+
+    <tr cate_id="{$v.cate_id}" pid="{$v.p_id}">
+        <td>{$v.cate_id}</td>
+        <td field="cate_name">
+            {:str_repeat("&nbsp;&nbsp;&nbsp;",$v['level']*3)}<span class="span_test">{$v.cate_name}</span>
+            <input type="text" class="changevalue" value="{$v.cate_name}" style="display: none">
+        </td>
+        <td>{$v.p_id}</td>
         <td>
-            <button type="button" class="layui-btn layui-btn-normal">删除</button>
+            <button type="button" class="layui-btn layui-btn-normal del">删除</button>
             <button type="button" class="layui-btn layui-btn-normal edit">修改</button>
         </td>
     </tr>
+    {/volist}
     </tbody>
 </table>
 <script>
     $(document).on("click",".edit",function(){
-        location.href="/index/category/edit?id=1";
+        var _this=$(this);
+        var cate_id=_this.parents("tr").attr("cate_id");
+        location.href="/index/category/edit?cate_id="+ cate_id;
+    })
+    $(document).on("click",".del",function(){
+        var _this=$(this);
+        var cate_id=_this.parents("tr").attr("cate_id");
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/index/category/delete",
+            data:{cate_id:cate_id},
+            success:function(res){
+                if(res.code==1){
+                    layer.msg(res.msg)
+                    location.href='/index/category/index'
+                }
+                if(res.code==2){
+                    alert(res.msg)
+                }
+            }
+        })
     })
 </script>
 {/block}
