@@ -1,10 +1,11 @@
 {extend name="public/common"}
 {block name="body"}
-<form  method="post" class="layui-form" action="update?id={$message.message_id}">
+<form  method="post" class="layui-form">
     <div class="layui-form-item">
         <label class="layui-form-label">资讯标题</label>
         <div class="layui-input-block">
             <input type="text" name="message_title" required  lay-verify="required" value="{$message.message_title}" placeholder="请输入标题" autocomplete="off" class="layui-input">
+            <input type="hidden" name="message_id" id="message_id" value="{$message.message_id}">
         </div>
     </div>
     <div class="layui-form-item">
@@ -22,9 +23,32 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn btn" lay-submit lay-filter="formDemo">立即修改</button>
-            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            <button class="layui-btn btn" id="button" lay-submit lay-filter="formDemo">立即修改</button>
         </div>
     </div>
 </form>
+<script>
+    $(document).on('click','#button',function(){
+        var message_title = $('input[name="message_title"]').val();
+        var message_name = $('textarea[name="message_name"]').val();
+        var is_hut = $('input[name="is_hut"]:checked').val();
+        var message_id=$('#message_id').val();
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/index/message/update",
+            data:{message_title:message_title,message_name:message_name,is_hut:is_hut,message_id:message_id},
+            success:function(res){
+                if(res.code==1){
+                    alert("修改成功")
+                    location.href='/index/message/index'
+                }
+                if(res.code==2){
+                    alert(res.msg)
+                }
+            }
+        })
+        return false;
+    })
+</script>
 {/block}

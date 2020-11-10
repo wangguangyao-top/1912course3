@@ -36,8 +36,22 @@
         location.href="/index/message/edit?id="+id;
     })
     $(document).on("click",".del",function(){
-        var id = $(this).val();
-        location.href="/index/message/delete?id="+id;
+        var message_id = $(this).val();
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/index/message/delete",
+            data:{message_id:message_id},
+            success:function(res){
+                if(res.code==1){
+                    alert("删除成功")
+                    location.href='/index/message/index'
+                }
+                if(res.code==2){
+                    alert(res.msg)
+                }
+            }
+        })
     })
 </script>
 {/block}
