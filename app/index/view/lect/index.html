@@ -1,13 +1,13 @@
 {extend name="public/common"}
 {block name="body"}
-    <form method="post" action="">
+     <form method="post" action="">
         <div class="layui-form-item">
             <label class="layui-form-label">搜索</label>
             <div class="layui-input-inline">
-                <input type="text" name="lect_name" required lay-verify="required" placeholder="请输入讲师名称" autocomplete="off" class="layui-input">
+                <input type="text" name="lect_name" required lay-verify="required" placeholder="请输入讲师名称" autocomplete="off" value="{:input('lect_name')}" class="layui-input">
             </div>
+            <button class="layui-btn btn" id="button" lay-submit lay-filter="formDemo">搜索</button>
         </div>
-
     </form>
     <table class="layui-table">
         <colgroup>
@@ -52,6 +52,8 @@
     })
 
     $(document).ready(function(){
+
+
         $('#div_test').on('click','.pagination a',function(){
             // alert('www');
             var url=$(this).prop('href');

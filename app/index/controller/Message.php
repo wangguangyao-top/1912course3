@@ -16,8 +16,21 @@ class Message extends Controller
      */
     public function index()
     {
-        $data = MessageModel::where('is_del',1)->select();
-        return view("index@message/index",['data'=>$data]);
+        $message_title=input('message_title');
+        $where=[];
+        if($message_title){
+            $where[]=['message_title','like',"%$message_title%"];
+        }
+        $data = MessageModel::where('is_del',1)->where($where)->paginate(2,false,['requry'=>input()]);
+        $query = request()->input();
+        $this->assign('data',$data);
+
+        $this->assign('pagi',$data->render());
+        if(Request()->isAjax()){
+            $this->view->engine->layout(false);
+            return view('index_ajax');
+        }
+        return view("index@message/index",['']);
     }
 
     /**

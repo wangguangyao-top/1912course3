@@ -22,6 +22,7 @@ class Lect extends Controller
             $where[]=['lect_name','like',"%$lect_name%"];
         }
         $data = LectModel::leftjoin('course_category','course_lect.cate_id=course_category.cate_id')->where('course_lect.is_del',1)->where($where)->paginate(2,false,['requry'=>input()]);
+        $query = request()->input();
         $this->assign('data',$data);
 
         $this->assign('pagi',$data->render());
@@ -29,7 +30,7 @@ class Lect extends Controller
             $this->view->engine->layout(false);
             return view('index_ajax');
         }
-        return view("index@lect/index",['']);
+        return view("index@lect/index",['query'=>$query]);
     }
 
     /**
