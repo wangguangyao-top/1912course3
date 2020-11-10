@@ -10,6 +10,7 @@
     <tr>
         <th>课程分类id</th>
         <th>课程分类名称</th>
+        <th>父级id</th>
         <th>操作</th>
     </tr>
     </thead>
@@ -22,6 +23,7 @@
             {:str_repeat("&nbsp;&nbsp;&nbsp;",$v['level']*3)}<span class="span_test">{$v.cate_name}</span>
             <input type="text" class="changevalue" value="{$v.cate_name}" style="display: none">
         </td>
+        <td>{$v.p_id}</td>
         <td>
             <button type="button" class="layui-btn layui-btn-normal del">删除</button>
             <button type="button" class="layui-btn layui-btn-normal edit">修改</button>
