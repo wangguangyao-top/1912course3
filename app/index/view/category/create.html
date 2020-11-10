@@ -37,7 +37,7 @@
             data:{cate_name:cate_name,p_id:p_id},
             success:function(res){
                 if(res.code==1){
-                    alert("添加成功")
+                    layer.msg(res.msg)
                     location.href='/index/category/index'
                 }
                 if(res.code==2){

@@ -48,7 +48,7 @@
             data:{cate_id:cate_id},
             success:function(res){
                 if(res.code==1){
-                    alert("删除成功")
+                    layer.msg(res.msg)
                     location.href='/index/category/index'
                 }
                 if(res.code==2){
