@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <meta name="description" content="particles.js is a lightweight JavaScript library for creating particles.">
+    <meta name="author" content="Vincent Garreau" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <script src="/layui/layui.js"></script>
+    <link rel="stylesheet" media="screen" href="/layui/css/login.css">
+</head>
+<body>
+<!-- particles.js container -->
+<div id="particles-js" style="display: flex;align-items: center;justify-content: center">
+</div>
+<div>
+    <div class="login-page">
+        <div class="login-content">
+            <div class="login-tit">登录</div>
+            <div class="login-input">
+                <input type="text" placeholder="用户名" name="admin_name" id="name">
+            </div>
+            <div class="login-input">
+                <input type="password" placeholder="密码" name="password" id="pwd">
+            </div>
+            <div class="login-btn">
+                <div>
+                    <button class="layui-btn layui-btn-normal btn">登录 </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/layui/particles.js"></script>
+<script src="/layui/app.js"></script>
+<script src="/jquery.min.js"></script>
+<script>
+    layui.use('element', function(){
+        var element = layui.element;
+        layui.use('layer', function(){
+            var layer = layui.layer;
+        });
+    });
+
+    $(document).on("click",".btn",function(){
+        var admin_name=$("input[name='admin_name']").val()
+        var password=$("input[name='password']").val()
+
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            data:{admin_name:admin_name,password:password},
+            url:"do_login",
+            success:function(res){
+                if(res.code==200){
+                    layer.msg(res.msg);
+                    location.href="/"
+                }else{
+                    layer.alert(res.msg)
+                }
+            }
+        })
+        return false;
+    })
+</script>
+<!-- scripts -->
+</body>
+</html>

@@ -1,0 +1,57 @@
+{extend name="public/common"}
+{block name="body"}
+<table class="layui-table">
+    <colgroup>
+        <col width="150">
+        <col width="200">
+        <col>
+    </colgroup>
+    <thead>
+    <tr>
+        <th>目录id</th>
+        <th>目录名称</th>
+        <th>目录父级id</th>
+        <th>目录简介</th>
+        <th>操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {foreach $cata_info as $k=>$v}
+    <tr catalog_id="{$v.catalog_id}">
+        <td>{$v.catalog_id}</td>
+        <td>{:str_repeat("&nbsp;&nbsp;&nbsp;",$v['level']*3)}{$v.catalog_name}</td>
+        <td>{$v.p_id}</td>
+        <td>{$v.catalog_desc}</td>
+        <td>
+            <button type="button" class="layui-btn layui-btn-normal del" >删除</button>
+            <button type="button" class="layui-btn layui-btn-normal edit" >修改</button>
+        </td>
+    </tr>
+    {/foreach}
+    </tbody>
+</table>
+<script>
+    $(document).on("click",".del",function(){
+        var catalog_id=$(this).parents("tr").attr('catalog_id');
+
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            data:{catalog_id:catalog_id},
+            url:"delete",
+            success:function(res){
+                if(res.code==200){
+                    layer.msg(res.msg)
+                    location.href="index"
+                }else{
+                    layer.alert(res.msg)
+                }
+            }
+        })
+    })
+    $(document).on("click",".edit",function(){
+        var catalog_id=$(this).parents("tr").attr('catalog_id');
+        location.href="/index/catalog/edit?catalog_id="+catalog_id;
+    })
+</script>
+{/block}
