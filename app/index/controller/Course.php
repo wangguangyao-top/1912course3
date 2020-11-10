@@ -49,7 +49,6 @@ class Course extends Controller
         //目录分类
         $CatalogModel=new CatalogModel;
         $data2=$CatalogModel->select();
-//        print_r($data2);echo "<hr>";
         $CateInfo2=$this->CateInfo2($data2);
         $this->assign("CateInfo2",$CateInfo2);
         //讲师分类
@@ -77,7 +76,6 @@ class Course extends Controller
 //            $data['course_image']=$img;
 //        }
         $data['add_time']=time();
-//        print_r($data);die;
         $res=$CourseModel->save($data);
         if($res){
             $this->success("添加成功",url('/index/course/index'));
@@ -85,15 +83,28 @@ class Course extends Controller
             $this->error("添加失败");
         }
     }
-    public function uploads($files){
-        //$files=request()->file($file);
-        $info=$files->move('./uploads');
-        if($info){
-            return $info->getSaveName();
-        }else{
-            return false;
-        }
+//    public function uploads($files){
+//        //$files=request()->file($file);
+//        $info=$files->move('./uploads');
+//        if($info){
+//            return $info->getSaveName();
+//        }else{
+//            return false;
+//        }
+//
+//    }
 
+
+    //文件上传
+    public function goodsimg(Request $request){
+        $arr = $_FILES["Filedata"];
+        $tmpName = $arr['tmp_name'];
+        $ext = explode(".",$arr['name'])[1];
+        $newFileName = md5(rand(10000,99999)).".".$ext;
+        $newFilePath = "./uploads/".$newFileName;
+        move_uploaded_file($tmpName,$newFilePath);
+        $newFilePath = trim($newFilePath,".");
+        return $newFilePath;
     }
     /**
      * 显示指定的资源

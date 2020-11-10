@@ -1,6 +1,9 @@
 {extend name="public/common"}
 {block name="body"}
-<form  method="post" action="#" class="layui-form" enctype="multipart/form-data">
+<link rel="stylesheet" href="/layui/uploadify/uploadify.css">
+<script src="/layui/uploadify/jquery.uploadify.js"></script>
+<span id="img" style="display: none;"></span>
+<form  method="post" action="#" class="layui-form">
     <div class="layui-form-item">
         <label class="layui-form-label">课程名称</label>
         <div class="layui-input-block">
@@ -12,7 +15,7 @@
         <div class="layui-input-block">
             <select name="catalog_id" lay-verify="required" id="catalog_id">
                 <option value="0">{:str_repeat("&nbsp;&nbsp;&nbsp;",3)}顶级分类</option>
-                {volist name="$CateInfo2" id="v"}
+                {volist name="CateInfo2" id="v"}
                 <option value="{$v.catalog_id}">{:str_repeat("&nbsp;&nbsp;&nbsp;",$v.level*3)}{$v.catalog_name}</option>
                 {/volist}
             </select>
@@ -40,10 +43,11 @@
             </select>
         </div>
     </div>
-    <div class="layui-form-item">
+    <div class="layui-form-item showimg">
         <label class="layui-form-label">课程图片</label>
         <div class="layui-input-block">
-            <input type="file" name="course_image" id="course_image" required  lay-verify="required"autocomplete="off" class="layui-input">
+            <input type="file" name="course_image" id="uploadify"  required  lay-verify="required"autocomplete="off" class="layui-input">
+            <span id="img3"></span>
         </div>
     </div>
     <div class="layui-form-item layui-form-text">
@@ -65,13 +69,27 @@
         </div>
     </div>
 </form>
+
 <script>
+    $(document).ready(function(){
+        $("#uploadify").uploadify({
+            uploader: "/index/course/goodsimg",
+            swf: "/layui/uploadify/uploadify.swf",
+            onUploadSuccess:function(res,data,msg){
+                var imgPath = data+',';
+                    $('#img').append(imgPath);
+
+                    $('#img3').append('<img src="'+data+'" width="50px">');
+
+            }
+        })
+    });
     $(document).on('click','#button',function(){
         var course_name = $('input[name="course_name"]').val();
         var catalog_id = $("#catalog_id").val();
         var cate_id = $("#cate_id").val();
         var lect_id = $("#lect_id").val();
-        var course_image = $("#course_image").val();
+        var course_image = $("#img").text();
         var course_desc = $("#course_desc").val();
         var course_notice = $("#course_notice").val()
 
