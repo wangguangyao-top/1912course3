@@ -5,6 +5,7 @@ namespace app\index\controller;
 use think\Controller;
 use think\Request;
 use app\index\model\LectModel;
+use app\index\model\Category;
 
 class Lect extends Controller
 {
@@ -15,8 +16,20 @@ class Lect extends Controller
      */
     public function index()
     {
-        $data = LectModel::where('is_del',1)->select();
-        return view("index@lect/index",['data'=>$data]);
+        $lect_name=input('lect_name');
+        $where=[];
+        if($lect_name){
+            $where[]=['lect_name','like',"%$lect_name%"];
+        }
+        $data = LectModel::leftjoin('course_category','course_lect.cate_id=course_category.cate_id')->where('course_lect.is_del',1)->where($where)->paginate(2,false,['requry'=>input()]);
+        $this->assign('data',$data);
+
+        $this->assign('pagi',$data->render());
+        if(Request()->isAjax()){
+            $this->view->engine->layout(false);
+            return view('index_ajax');
+        }
+        return view("index@lect/index",['']);
     }
 
     /**
@@ -26,8 +39,9 @@ class Lect extends Controller
      */
     public function create()
     {
+        $course = Category::select();
 
-        return view("index@lect/create");
+        return view("index@lect/create",['course'=>$course]);
     }
 
     /**
@@ -49,13 +63,14 @@ class Lect extends Controller
             'lect_style'=>$lect_style,
             'add_time'=>time(),
         ];
-        $img=Request()->file('lect_image');
-        //文件上传
-        if($_FILES['lect_image']['error']==0){
-            $img=$this->uploads($img);
-            $data['lect_image']=$img;
-        }
-        //文件上传
+//        文件上传
+//          $img=Request()->file('lect_image');
+//
+//        if($_FILES['lect_image']['error']==0){
+//            $img=$this->uploads($img);
+//            $data['lect_image']=$img;
+//        }
+//        //文件上传
         //dump($data);die;
         $res = LectModel::insert($data);
         if($res){
@@ -65,6 +80,9 @@ class Lect extends Controller
         }
     }
 
+
+
+    //文件上传
     public function uploads($files){
         //$files=request()->file($file);
         $info=$files->move('./uploads');
@@ -96,7 +114,8 @@ class Lect extends Controller
     public function edit($id)
     {
         $data = LectModel::where('lect_id',$id)->find();
-        return view("index@lect/edit",['data'=>$data]);
+        $cate = Category::select();
+        return view("index@lect/edit",['data'=>$data,'cate'=>$cate]);
     }
 
     /**
@@ -106,10 +125,11 @@ class Lect extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
         $lect_name = $request->post('lect_name');
         $cate_id = $request->post('cate_id');
+        $lect_id = $request->post('lect_id');
         $lect_resume = $request->post('lect_resume');
         $lect_style = $request->post('lect_style');
         $data = [
@@ -119,12 +139,14 @@ class Lect extends Controller
             'lect_style'=>$lect_style,
             'add_time'=>time(),
         ];
-        $img=Request()->file('lect_image');
-        if($_FILES['lect_image']['error']==0){
-            $img=$this->uploads($img);
-            $data['lect_image']=$img;
-        }
-        $res = LectModel::where('lect_id',$id)->update($data);
+//        //文件上传
+//        $img=Request()->file('lect_image');
+//        if($_FILES['lect_image']['error']==0){
+//            $img=$this->uploads($img);
+//            $data['lect_image']=$img;
+//        }
+//        //文件上传
+        $res = LectModel::where('lect_id',$lect_id)->update($data);
         //print_r($res);die;
         if($res){
             $this->success("修改成功","lect/index");
@@ -139,10 +161,11 @@ class Lect extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function delete($id)
+    public function delete()
     {
+        $lect_id = input("lect_id");
         $where=[
-            ['lect_id','=',$id],//用户的id
+            ['lect_id','=',$lect_id],//用户的id
             ['is_del','=',1]//没有被删除
         ];
         $res = LectModel::where($where)->update(['is_del'=>2]);

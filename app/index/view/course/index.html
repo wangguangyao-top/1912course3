@@ -1,5 +1,15 @@
 {extend name="public/common"}
 {block name="body"}
+<form>
+    <div class="layui-form-item">
+        <div class="layui-input-inline">
+            <input type="text" name="course_name" value="{:input('course_name')}" required lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
+        </div>
+        <div class="layui-input-inline">
+            <input type="submit" class="layui-btn layui-btn-lg layui-btn-radius layui-btn-normal del" value="搜索">
+        </div>
+    </div>
+</form>
 <table class="layui-table">
     <colgroup>
         <col width="150">
@@ -10,9 +20,9 @@
     <tr>
         <th>课程id</th>
         <th>课程名称</th>
-        <th>父级分类</th>
-        <th>讲师选择</th>
         <th>课程分类</th>
+        <th>目录分类</th>
+        <th>讲师选择</th>
         <th>课程图片</th>
         <th>课程简介</th>
         <th>课程公告</th>
@@ -20,25 +30,53 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-        <td>1</td>
-        <td>储赢</td>
-        <td>储赢</td>
-        <td>储赢</td>
-        <td>储赢</td>
-        <td>储赢</td>
-        <td>储赢</td>
-        <td>储赢</td>
+    {volist name="course_info" id="v"}
+    <tr course_id="{$v.course_id}">
+        <td>{$v.course_id}</td>
+        <td field="course_name">
+            {$v.course_name}
+        </td>
+        <td field="cate_name">
+            {$v.cate_name}
+        </td>
+        <td>{$v.catalog_name}</td>
+        <td>{$v.lect_name}</td>
+        <td><img src="/uploads/{$v.course_image}" width="35" height="30"></td>
+        <td>{$v.course_desc}</td>
+        <td>{$v.course_notice}</td>
+
         <td>
-            <button type="button" class="layui-btn layui-btn-normal">删除</button>
+            <button type="button" class="layui-btn layui-btn-normal del">删除</button>
             <button type="button" class="layui-btn layui-btn-normal edit">修改</button>
         </td>
     </tr>
+    {/volist}
     </tbody>
 </table>
+{$course_info|raw}
 <script>
+    $(document).on("click",".del",function(){
+        var course_id=$(this).parents("tr").attr("course_id");
+
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/index/course/delete",
+            data:{course_id:course_id},
+            success:function(res){
+               if(res.code==200){
+                   layer.msg(res.msg)
+                   location.href="index";
+               }else{
+                   layer.alert(res.msg)
+               }
+            }
+        })
+
+    })
     $(document).on("click",".edit",function(){
-        location.href="/index/course/edit?id=1";
+        var course_id=$(this).parents("tr").attr("course_id");
+        location.href="/index/course/edit?course_id="+course_id;
     })
 </script>
 {/block}

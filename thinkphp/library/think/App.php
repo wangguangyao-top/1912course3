@@ -286,8 +286,8 @@ class App extends Container
             }
 
             // 加载公共文件
-            if (is_file($path . 'common.php')) {
-                include_once $path . 'common.php';
+            if (is_file($path . 'common.html')) {
+                include_once $path . 'common.html';
             }
 
             if ('' == $module) {

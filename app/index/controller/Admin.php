@@ -12,10 +12,6 @@ class Admin
     {
         return 'hello,' . $name;
     }
-    public function abc(){
-	    echo "大林子又他妈的来了";
-        return view('index@Admin/index');
-    }
     public function home(){
         return view("index@Admin/home");
     }

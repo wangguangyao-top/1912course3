@@ -1,9 +1,10 @@
 {extend name="public/common"}
 {block name="body"}
-<form  method="post" class="layui-form" action="update?id={$data.lect_id}" enctype="multipart/form-data">
+<form  method="post" class="layui-form"  enctype="multipart/form-data">
     <div class="layui-form-item">
         <label class="layui-form-label">讲师名称</label>
         <div class="layui-input-block">
+            <input type="hidden" name="lect_id" id="lect_id" value="{$data.lect_id}">
             <input type="text" name="lect_name" required  lay-verify="required" value="{$data.lect_name}" placeholder="请输入名称" autocomplete="off" class="layui-input">
         </div>
     </div>
@@ -17,13 +18,10 @@
     <div class="layui-form-item">
         <label class="layui-form-label">课程分类</label>
         <div class="layui-input-block">
-            <select name="city" lay-verify="required" >
-                <option value=""></option>
-                <option value="0">redis</option>
-                <option value="1">mysql</option>
-                <option value="2">linux</option>
-                <option value="3">css</option>
-                <option value="4">php</option>
+            <select name="cate_id" lay-verify="required" id="cate_id">
+                {foreach $cate as $k=>$v}
+                    <option value="{$v.cate_id}" {$v.cate_id==$data.cate_id?'selected':''}>{$v.cate_name}</option>
+                {/foreach}
             </select>
         </div>
     </div>
@@ -41,9 +39,33 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn btn" lay-submit lay-filter="formDemo">立即修改</button>
-            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            <button class="layui-btn btn" lay-submit lay-filter="formDemo" id="button">立即修改</button>
         </div>
     </div>
 </form>
+<script>
+    $(document).on('click','#button',function(){
+        var lect_name = $('input[name="lect_name"]').val();
+        var cate_id = $("#cate_id").val();
+        var lect_resume = $('textarea[name="lect_resume"]').val();
+        var lect_style = $('textarea[name="lect_style"]').val();
+        var lect_id=$('#lect_id').val();
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/index/lect/update",
+            data:{lect_name:lect_name,cate_id:cate_id,lect_resume:lect_resume,lect_style:lect_style,lect_id:lect_id},
+            success:function(res){
+                if(res.code==1){
+                    alert("修改成功")
+                    location.href='/index/lect/index'
+                }
+                if(res.code==2){
+                    alert(res.msg)
+                }
+            }
+        })
+        return false;
+    })
+</script>
 {/block}
