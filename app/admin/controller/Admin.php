@@ -1,5 +1,5 @@
 <?php
-namespace app\index\controller;
+namespace app\admin\controller;
 
 class Admin
 {
@@ -12,7 +12,8 @@ class Admin
     {
         return 'hello,' . $name;
     }
-    public function home(){
-        return view("index@Admin/home");
+    public function abc(){
+        echo 12345;
+        return view('Index@Index/Index');
     }
 }
