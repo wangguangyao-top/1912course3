@@ -128,7 +128,7 @@ class Build
         if (empty($list)) {
             // 创建默认的模块目录和文件
             $list = [
-                '__file__' => ['common.php'],
+                '__file__' => ['common.html'],
                 '__dir__'  => ['controller', 'model', 'view', 'config'],
             ];
         }
@@ -368,7 +368,7 @@ class Build
      */
     protected function buildHello($module, $namespace, $suffix = false)
     {
-        $filename = $this->basePath . ($module ? $module . DIRECTORY_SEPARATOR : '') . 'controller' . DIRECTORY_SEPARATOR . 'Admin' . ($suffix ? 'Controller' : '') . '.php';
+        $filename = $this->basePath . ($module ? $module . DIRECTORY_SEPARATOR : '') . 'controller' . DIRECTORY_SEPARATOR . 'Index' . ($suffix ? 'Controller' : '') . '.php';
         if (!is_file($filename)) {
             $content = file_get_contents($this->app->getThinkPath() . 'tpl' . DIRECTORY_SEPARATOR . 'default_index.tpl');
             $content = str_replace(['{$app}', '{$module}', '{layer}', '{$suffix}'], [$namespace, $module ? $module . '\\' : '', 'controller', $suffix ? 'Controller' : ''], $content);
@@ -393,7 +393,7 @@ class Build
             file_put_contents($filename, "<?php\n//配置文件\nreturn [\n\n];");
         }
 
-        $filename = $this->basePath . ($module ? $module . DIRECTORY_SEPARATOR : '') . 'common.php';
+        $filename = $this->basePath . ($module ? $module . DIRECTORY_SEPARATOR : '') . 'common.html';
 
         if (!is_file($filename)) {
             file_put_contents($filename, "<?php\n");
