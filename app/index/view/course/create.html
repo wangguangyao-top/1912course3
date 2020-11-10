@@ -1,6 +1,6 @@
 {extend name="public/common"}
 {block name="body"}
-<form  method="post" action="/index/course/save" class="layui-form" enctype="multipart/form-data">
+<form  method="post" action="#" class="layui-form" enctype="multipart/form-data">
     <div class="layui-form-item">
         <label class="layui-form-label">课程名称</label>
         <div class="layui-input-block">
@@ -65,5 +65,31 @@
         </div>
     </div>
 </form>
-
+<script>
+    $(document).on('click','#button',function(){
+        var cate_name = $('input[name="cate_name"]').val();
+        var p_id = $("#p_id").val();
+        var cate_id = $("#cate_id").val();
+        var lect_id = $("#lect_id").val();
+        var course_image = $("#course_image").val();
+        var course_desc = $("#course_desc").val();
+        var course_notice = $("#course_notice").val()
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/index/course/save",
+            data:{cate_name:cate_name,p_id:p_id,cate_id:cate_id,lect_id:lect_id,course_image:course_image,course_desc:course_desc,course_notice:course_notice},
+            success:function(res){
+                if(res.code==1){
+                    layer.msg(res.msg)
+                    location.href='/index/course/index'
+                }
+                if(res.code==2){
+                    alert(res.msg)
+                }
+            }
+        })
+        return false;
+    })
+</script>
 {/block}

@@ -62,7 +62,6 @@ class Course extends Controller
         $CourseModel=new CourseModel;
         $data=$request->post();
 
-
         $img=Request()->file('course_image');
         if($_FILES['course_image']['error']==0){
             $img=$this->uploads($img);

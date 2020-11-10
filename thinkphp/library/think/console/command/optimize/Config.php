@@ -75,8 +75,8 @@ class Config extends Command
         }
 
         // 加载公共文件
-        if (is_file($path . 'common.php')) {
-            $common = substr(php_strip_whitespace($path . 'common.php'), 6);
+        if (is_file($path . 'common.html')) {
+            $common = substr(php_strip_whitespace($path . 'common.html'), 6);
             if ($common) {
                 $content .= PHP_EOL . $common . PHP_EOL;
             }
