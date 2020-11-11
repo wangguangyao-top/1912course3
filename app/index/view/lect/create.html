@@ -10,7 +10,8 @@
     <div class="layui-form-item">
         <label class="layui-form-label">讲师照片</label>
         <div class="layui-input-block">
-            <input type="file" name="lect_image" required  lay-verify="required" autocomplete="off" class="layui-input">
+            <input type="file" name="lect_image" id="uploadify" required  lay-verify="required" autocomplete="off" class="layui-input">
+            <span id="img3"></span>
         </div>
     </div>
     <div class="layui-form-item">
@@ -45,13 +46,14 @@
     $(document).on('click','#button',function(){
         var lect_name = $('input[name="lect_name"]').val();
         var cate_id = $("#cate_id").val();
+        var lect_image = $("#img").text();
         var lect_resume = $('textarea[name="lect_resume"]').val();
         var lect_style = $('textarea[name="lect_style"]').val();
         $.ajax({
             type:"post",
             dataType:"json",
             url:"/index/lect/save",
-            data:{lect_name:lect_name,cate_id:cate_id,lect_resume:lect_resume,lect_style:lect_style},
+            data:{lect_name:lect_name,cate_id:cate_id,lect_image:lect_image,lect_resume:lect_resume,lect_style:lect_style},
             success:function(res){
                 if(res.code==1){
                     alert("添加成功")
