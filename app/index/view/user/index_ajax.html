@@ -19,8 +19,8 @@
             <td>{$v.admin_id}</td>
             <td>{$v.admin_name}</td>
             <td>
-                <a href="#" class="layui-bg-orange">角色</a>|
-                <a href="#" class="layui-bg-green">权限</a>
+                <a href="{:url('/index/user/userRole','id='.$v['admin_id'])}" class="layui-bg-orange">角色</a>
+                <!--<a href="#" class="layui-bg-green">权限</a>-->
             </td>
             <td>
                 <button type="button" class="layui-btn layui-btn-normal del" del_id="{$v.admin_id}">删除</button>
