@@ -17,10 +17,23 @@ class Issue extends Controller
      */
     public function index()
     {
-        $data = IssueModel::leftjoin("course_user",'course_issue.user_id=course_user.user_id')->where('course_issue.is_del',1)->select();
+        $user_name=input('user_name');
+        $where=[];
+        if($user_name){
+            $where[]=['user_name','like',"%$user_name%"];
+        }
+        $data = IssueModel::leftjoin("course_user",'course_issue.user_id=course_user.user_id')->where('course_issue.is_del',1)->where($where)->paginate(2,false,['requry'=>input()]);
         //$data = IssueModel::select();
         //$user = UserModel::select();
-        return view("index@issue/index",['data'=>$data]);
+        $query = request()->input();
+        $this->assign('data',$data);
+
+        $this->assign('pagi',$data->render());
+        if(Request()->isAjax()){
+            $this->view->engine->layout(false);
+            return view('index_ajax');
+        }
+        return view("index@issue/index",['']);
     }
 
     /**
@@ -84,9 +97,14 @@ class Issue extends Controller
      * @param  int  $id
      * @return \think\Response
      */
-    public function delete($id)
+    public function delete()
     {
-        $res = IssueModel::where('issue_id',$id)->delete();
+        $issue_id = input("issue_id");
+        $where=[
+            ['issue_id','=',$issue_id],//用户的id
+            ['is_del','=',1]//没有被删除
+        ];
+        $res = IssueModel::where($where)->update(['is_del'=>2]);
         if($res){
             $this->success('删除成功','issue/index');
         }else{
