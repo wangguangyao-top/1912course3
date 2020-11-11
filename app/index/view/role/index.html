@@ -11,6 +11,7 @@
         <tr>
             <th>角色id</th>
             <th>角色名称</th>
+            <th>角色权限</th>
             <th>操作</th>
         </tr>
         </thead>
@@ -19,6 +20,9 @@
         <tr>
             <td>{$v.role_id}</td>
             <td>{$v.role_name}</td>
+            <td>
+                <a href="{:url('/index/role/roleBased','id='.$v['role_id'])}" class="layui-bg-green">权限</a>
+            </td>
             <td>
                 <button type="button" class="layui-btn layui-btn-normal  del" del_id="{$v.role_id}">删除</button>
                 <a href="{:url('/index/role/edit','id='.$v['role_id'])}">
@@ -63,6 +67,7 @@
                 type:'get',
                 success:function(res){
                     if(res.error==200){
+                        layer.alert(res.msg);
                         _this.parents('tr').remove();
                     }else{
                         layer.alert(res.msg);

@@ -1,5 +1,14 @@
 {extend name="public/common"}
 {block name="body"}
+<form method="post" action="">
+    <div class="layui-form-item">
+        <label class="layui-form-label">搜索</label>
+        <div class="layui-input-inline">
+            <input type="text" name="message_title" required lay-verify="required" placeholder="请输入讲师名称" autocomplete="off" value="{:input('message_title')}" class="layui-input">
+        </div>
+        <button class="layui-btn btn" id="button" lay-submit lay-filter="formDemo">搜索</button>
+    </div>
+</form>
 <table class="layui-table">
     <colgroup>
         <col width="150">
@@ -30,14 +39,47 @@
     {/foreach}
     </tbody>
 </table>
+{$pagi|raw}
+
 <script>
     $(document).on("click",".edit",function(){
         var id = $(this).val();
         location.href="/index/message/edit?id="+id;
     })
+
+    $(document).ready(function(){
+        $('#div_test').on('click','.pagination a',function(){
+            // alert('www');
+            var url=$(this).prop('href');
+            $.ajax({
+                url:url,
+                dataType:'text',
+                data:{},
+                type:'get',
+                success:function(res){
+                    $('#div_list').html(res)
+                }
+            })
+            return false;
+        })
+    })
     $(document).on("click",".del",function(){
-        var id = $(this).val();
-        location.href="/index/message/delete?id="+id;
+        var message_id = $(this).val();
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/index/message/delete",
+            data:{message_id:message_id},
+            success:function(res){
+                if(res.code==1){
+                    alert("删除成功")
+                    location.href='/index/message/index'
+                }
+                if(res.code==2){
+                    alert(res.msg)
+                }
+            }
+        })
     })
 </script>
 {/block}

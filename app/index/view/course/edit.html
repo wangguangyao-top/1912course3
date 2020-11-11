@@ -1,6 +1,6 @@
 {extend name="public/common"}
 {block name="body"}
-<form  method="post" action="/index/course/update" class="layui-form" enctype="multipart/form-data">
+<form  method="post" action="#" class="layui-form" enctype="multipart/form-data">
     <div class="layui-form-item">
         <label class="layui-form-label">课程名称</label>
         <div class="layui-input-block">
@@ -9,12 +9,12 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">父级id</label>
+        <label class="layui-form-label">目录分类</label>
         <div class="layui-input-block">
-            <select name="p_id" lay-verify="required" id="p_id">
+            <select name="catalog_id" lay-verify="required" id="catalog_id">
                 <option value="0">{:str_repeat("&nbsp;&nbsp;&nbsp;",3)}顶级分类</option>
                 {volist name="$CateInfo2" id="v"}
-                {$v.course_name}
+                <option value="{$v.catalog_id}">{:str_repeat("&nbsp;&nbsp;&nbsp;",$v.level*3)}{$v.catalog_name}</option>
                 {/volist}
             </select>
         </div>
@@ -44,7 +44,6 @@
     <div class="layui-form-item">
         <label class="layui-form-label">课程图片</label>
         <div class="layui-input-block">
-            <img src="/uploads/{$course_info.course_image}" width="35" height="30">
             <input type="file" name="course_image" id="course_image" required  lay-verify="required"autocomplete="off" class="layui-input">
         </div>
     </div>
@@ -62,10 +61,39 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn btn" lay-submit lay-filter="formDemo">立即修改</button>
+            <button class="layui-btn btn" lay-submit lay-filter="formDemo" id="button">立即修改</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </div>
 </form>
+<script>
+    $(document).on('click','#button',function(){
+        var course_id = $('input[name="course_id"]').val();
 
+        var course_name = $('input[name="course_name"]').val();
+        var catalog_id = $("#catalog_id").val();
+        var cate_id = $("#cate_id").val();
+        var lect_id = $("#lect_id").val();
+        var course_image = $("#course_image").val();
+        var course_desc = $("#course_desc").val();
+        var course_notice = $("#course_notice").val()
+
+        $.ajax({
+            type:"post",
+            dataType:"json",
+            url:"/index/course/update",
+            data:{course_id:course_id,course_name:course_name,catalog_id:catalog_id,cate_id:cate_id,lect_id:lect_id,course_image:course_image,course_desc:course_desc,course_notice:course_notice},
+            success:function(res){
+                if(res.code==1){
+                    layer.msg(res.msg)
+                    location.href='/index/course/index'
+                }
+                if(res.code==2){
+                    alert(res.msg)
+                }
+            }
+        })
+        return false;
+    })
+</script>
 {/block}

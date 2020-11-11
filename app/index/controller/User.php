@@ -2,9 +2,13 @@
 
 namespace app\index\controller;
 
+use app\index\model\RbacBased;
+use app\index\model\RbacRole;
+use app\index\model\RbacRoleBased;
 use think\Controller;
 use think\Request;
 use app\index\model\RbacUser;
+use app\index\model\RbacUserRole;
 use think\Db;
 
 class User extends Controller
@@ -33,7 +37,7 @@ class User extends Controller
      */
     public function create(Request $request)
     {
-        if(Request()->isAjax()){
+        if($request->isAjax() && $request->isPost()){
             $admin_name=empty($request->post("admin_name"))?"":$request->post("admin_name");
             $pwd=empty($request->post('pwd'))?'':$request->post('pwd');
             if($admin_name==''||$pwd==''){
@@ -158,5 +162,87 @@ class User extends Controller
         echo json_encode(['error'=>100001,'msg'=>'删除失败']);
         exit;
 
+    }
+
+    /**
+     * 赋予角色
+     *
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function userRole(Request $request)
+    {
+        if(Request()->isAjax()){
+            $admin_id=$request->post('admin_id');
+            $role_id=$request->post('role_id');
+//            dump($admin_id);die;
+            if(empty($admin_id)||empty($role_id)){
+                echo json_encode(['error'=>100003,'msg'=>'参数缺失']);
+                exit;
+            }
+            $data=[
+                'admin_id'=>$admin_id,
+                'role_id'=>$role_id
+            ];
+            $adminRole=RbacUserRole::where('admin_id',$admin_id)->find();
+            if($adminRole){
+                $res=RbacUserRole::where('admin_id',$admin_id)->update($data);
+                if($res){
+                    echo json_encode(['error'=>200,'msg'=>'修改成功']);
+                    exit;
+                }
+                echo json_encode(['error'=>100001,'msg'=>'修改失败']);
+                exit;
+            }else{
+                $res=RbacUserRole::create($data);
+                if($res){
+                    echo json_encode(['error'=>200,'msg'=>'添加成功']);
+                    exit;
+                }
+                echo json_encode(['error'=>100001,'msg'=>'添加失败']);
+                exit;
+            }
+        }
+        //
+        $admin_id=input('id');
+        //查询管理员信息
+        $admin=RbacUser::where('admin_id',$admin_id)->find();
+        $this->assign('admin',$admin);
+        //查询关联表中的角色id
+        $userRole=RbacUserRole::where('admin_id',$admin_id)->find();
+        $role_ids=$userRole['role_id'];
+        $role_ids=explode(',',$role_ids);
+        $this->assign('role_ids',$role_ids);
+        //查询所有的角色
+        $role=RbacRole::where('is_del',1)->select();
+        $this->assign('role',$role);
+        return view('user/userRole');
+    }
+
+    /**
+     * 查看权限
+     *
+     * @param  int  $id
+     * @return \think\Response
+     */
+    public function userBased()
+    {
+        $admin_id=input('id');
+        //通过管理员id查询所拥有的角色id
+        $userRole=RbacUserRole::where('admin_id',$admin_id)->find();
+        $role_ids=$userRole['role_id'];
+        $role_ids=explode(',',$role_ids);
+        $role_names=[];
+        foreach($role_ids as $k=>$v){
+            $userRole=RbacRole::where('role_id',$v)->find();
+            $role_name=$userRole['role_name'];
+            $role_names[]=$role_name;
+        }
+
+
+        $this->assign('role_names',$role_names);
+
+
+        return view('user/userBased');
     }
 }
