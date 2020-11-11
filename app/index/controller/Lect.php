@@ -72,7 +72,6 @@ class Lect extends Controller
 //            $data['lect_image']=$img;
 //        }
 //        //文件上传
-        //dump($data);die;
         $res = LectModel::insert($data);
         if($res){
             $this->success("添加成功","lect/index");
