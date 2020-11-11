@@ -1,0 +1,86 @@
+{extend name="public/common"}
+{block name="body"}
+<link rel="stylesheet" href="/uploadify/uploadify.css">
+<script src="/uploadify/jquery.uploadify.js"></script>
+<span class="img2" style="display:none"></span>
+<form  method="post" class="layui-form" action="save" enctype="multipart/form-data">
+    <div class="layui-form-item">
+        <label class="layui-form-label">轮播图跳转地址</label>
+        <div class="layui-input-block">
+            <input type="hidden" value="{$data.slide_id}" id="slide_id">
+            <input type="text" required  lay-verify="required" value="{$data.slide_url}" placeholder="跳转地址" autocomplete="off" class="layui-input slide_url">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">图片</label>
+        <div class="layui-input-block">
+            <img src="{$data.slide_images}" width="30px">
+            <input type="file" required  lay-verify="required" name="slide_images" autocomplete="off" id="slide_images" class="layui-input">
+            <span id="img"></span>
+        </div>
+    </div>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">权重</label>
+        <div class="layui-input-block">
+            <input type="text" required value="{$data.slide_weight}"  lay-verify="required" autocomplete="off" class="layui-input slide_weight">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button class="layui-btn btn" type="button" lay-submit lay-filter="formDemo">立即修改</button>
+        </div>
+    </div>
+</form>
+<script>
+    $(function (){
+        $("#slide_images").uploadify({
+            //后台处理的页面
+            uploader: '/index/Slideshow/uploader',
+            //指定swf文件进度条
+            swf: '/uploadify/uploadify.swf',
+            buttonText:'上传图片',
+            fileSizeLimit:'0',
+            //上传成功
+            onUploadSuccess: function (file,img,fileObj) {
+                var video=file.type;
+                    video=video.toLowerCase();
+                var arr=['.jpg','.png','.bmp','.bmp','.tga','.tif','.gif','.pcx','.fpx','.svg','.pcd','.jpeg','.exif','.psd','.webp','.tif','.cdr','.jfif'];
+                var index=$.inArray(video,arr);
+                if(index==-1){
+                    var img1=img+','
+                        $('.img2').append(img1);
+                        var img2='<video src="'+img+'" width="100px" controls autoplay></video>'
+                        $('#img').append(img2);
+                    }else{
+                        var img1=img+','
+                        $('.img2').append(img1);
+                        var img2='<img src="'+img+'" width="100px">'
+                        $('#img').append(img2)
+                    }
+            }
+        });
+        $(document).on('click','.btn',function () {
+            var slide_id=$('#slide_id').val();
+            var slide_url=$('.slide_url').val();
+            var slide_images=$('.img2').text();
+            var slide_weight=$('.slide_weight').val();
+            var url='/index/Slideshow/update';
+            var data={slide_id:slide_id,slide_url:slide_url,slide_images:slide_images,slide_weight:slide_weight};
+            $.ajax({
+                type:'post',
+                url:url,
+                data:data,
+                dataType:'json',
+                success:function (info) {
+                    if(info.code==200){
+                        alert(info.msg);
+                        location.href='/index/Slideshow/show'
+                    }else{
+                        alert(info.msg);
+                    }
+                }
+            })
+        })
+    })
+</script>
+{/block}
