@@ -1,0 +1,112 @@
+{extend name="public/common"}
+{block name="body"}
+<style>
+    ul.pagination {
+        display: inline-block;
+        padding: 0;
+        margin: 0;
+    }
+
+    ul.pagination li {display: inline;}
+
+    ul.pagination li {
+        color: black;
+        float: left;
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+        border: 1px solid #ddd;
+    }
+
+    ul.pagination li.active {
+        background-color: #4CAF50;
+        color: white;
+        border: 1px solid #4CAF50;
+    }
+
+    ul.pagination li:hover:not(.active) {background-color: #ddd;}
+</style>
+<form  method="post" class="layui-form" action="save">
+    <div class="layui-form-item">
+        <div class="layui-input-inline">
+            <input type="text" required lay-verify="required" placeholder="搜索路径" autocomplete="off" class="layui-input slidde_url">
+        </div>
+        <button class="layui-btn btn" lay-submit lay-filter="formDemo">搜索</button>
+    </div>
+</form>
+<table class="layui-table">
+    <colgroup>
+        <col width="150">
+        <col width="200">
+        <col>
+    </colgroup>
+    <thead>
+    <tr>
+        <td>ID</td>
+        <td>URL路径</td>
+        <td>图片</td>
+        <td>权重</td>
+        <td>时间</td>
+        <td>操作</td>
+    </tr>
+    <tbody>
+    {foreach $data as $k=>$v}
+    <tr>
+        <td>{$v.slide_id}</td>
+        <td>{$v.slide_url}</td>
+        <td><img src="{$v.slide_images}" width="30px"></td>
+        <td>{$v.slide_weight}</td>
+        <td>{$v.add_time}</td>
+        <td><button id="del" data-id="{$v.slide_id}">删除</button> | <a href="/index/slideshow/update?id={$v.slide_id}">修改</a></td>
+    </tr>
+    {/foreach}
+    </tbody>
+</table>
+<p>{$data | raw}</p>
+<script>
+    $(document).on('click','.btn',function () {
+        var slidde_url=$('.slidde_url').val();
+        var url='/index/slideshow/seek';
+        var data={slidde_url:slidde_url};
+            $.ajax({
+                type:'post',
+                url:url,
+                data:data,
+                dataType:'json',
+                success:function (info) {
+                    if(info.code==200){
+                      var str='';
+                      var data=info.data;
+                        for (var i in data){
+                            str+='<tr><td>'+data[i].slide_id+'</td> <td>'+data[i].slide_url+'</td> <td><img src="'+data[i].slide_images+'" width="30px"></td> <td>'+data[i].slide_weight+'</td> <td>'+data[i].add_time+'</td> <td></td></tr>';
+                        }
+                        $('tbody').html(str);
+                    }else{
+                        alert(info.msg);
+                    }
+                }
+            })
+        return false;
+    })
+    $(document).on('click','#del',function () {
+        var id=$(this).data('id');
+        var url='/index/slideshow/del';
+        var data={id:id};
+        $.ajax({
+            type:'post',
+            url:url,
+            data:data,
+            dataType:'json',
+            success:function (info) {
+                if(info.code==200){
+                    alert(info.msg);
+                    location.href='/index/slideshow/show';
+                }else{
+                    alert(info.msg);
+                }
+            }
+        })
+    })
+
+</script>
+{/block}
