@@ -8,7 +8,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">课程名称</label>
         <div class="layui-input-block">
-            <input type="hidden" name="course_id" value="{$course_info['course_id']}">
+            <input type="hidden" name="course_id" value="{$course_info['course_id']}" id="course_id">
             <input type="text" name="course_name" value="{$course_info['course_name']}" required  lay-verify="required" placeholder="请输入名称" autocomplete="off" class="layui-input">
         </div>
     </div>
@@ -48,6 +48,7 @@
     <div class="layui-form-item showimg">
         <label class="layui-form-label">课程图片</label>
         <div class="layui-input-block">
+            <img src="{$course_info['course_image']}" width="30px">
             <input type="file" name="course_image" id="uploadify" value="{$course_info['course_image']}"  required  lay-verify="required"autocomplete="off" class="layui-input">
             <span id="img3"></span>
         </div>
@@ -87,6 +88,7 @@
         })
     });
     $(document).on('click','#button',function(){
+        var course_id = $("#course_id").val();
         var course_name = $('input[name="course_name"]').val();
         var catalog_id = $("#catalog_id").val();
         var cate_id = $("#cate_id").val();
@@ -99,7 +101,7 @@
             type:"post",
             dataType:"json",
             url:"/index/course/update",
-            data:{course_name:course_name,catalog_id:catalog_id,cate_id:cate_id,lect_id:lect_id,course_image:course_image,course_desc:course_desc,course_notice:course_notice},
+            data:{course_id:course_id,course_name:course_name,catalog_id:catalog_id,cate_id:cate_id,lect_id:lect_id,course_image:course_image,course_desc:course_desc,course_notice:course_notice},
             success:function(res){
                 if(res.code==1){
                     layer.msg(res.msg)
