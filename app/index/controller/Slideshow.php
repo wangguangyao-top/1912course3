@@ -70,10 +70,11 @@ class Slideshow extends Controller
         $id=$request->id;
         $where=[];
         $where[]=['is_del','=',1];
+        $where[]=['slide_id','=',$id];
         $slid=new SlideModel();
         $del=$slid->where($where)->update(['is_del'=>2]);
         if($del){
-            echo json_encode(['code'=>200,'msh'=>'ok']);
+            echo json_encode(['code'=>200,'msg'=>'ok']);
             die;
         }
 

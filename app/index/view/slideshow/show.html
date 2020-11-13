@@ -52,7 +52,7 @@
                       var str='';
                       var data=info.data;
                         for (var i in data){
-                            str+='<tr><td>'+data[i].slide_id+'</td> <td>'+data[i].slide_url+'</td> <td><img src="'+data[i].slide_images+'" width="30px"></td> <td>'+data[i].slide_weight+'</td> <td>'+data[i].add_time+'</td> <td></td></tr>';
+                            str+='<tr><td>'+data[i].slide_id+'</td> <td>'+data[i].slide_url+'</td> <td><img src="'+data[i].slide_images+'" width="30px"></td> <td>'+data[i].slide_weight+'</td> <td>'+data[i].add_time+'</td> <td><button id="del" data-id="'+data[i].slide_id+'">删除</button> | <a href="/index/slideshow/update?id='+data[i].slide_id+'">修改</a></td></tr>';
                         }
                         $('tbody').html(str);
                     }else{

@@ -23,7 +23,6 @@ class Course extends Controller
         if(!empty($data['course_name'])){
             $where[]=["course_name","like","%".$data['course_name']."%"];
         }
-
         $course_info=CourseModel::
         leftjoin("course_category","course_course.cate_id=course_category.cate_id")
         ->leftjoin("course_lect","course_course.lect_id=course_lect.lect_id")
@@ -55,7 +54,6 @@ class Course extends Controller
         $LectModel=new LectModel;
         $data3=$LectModel->select();
         $this->assign("data3",$data3);
-
         return view("index@course/create");
     }
 
@@ -220,5 +218,22 @@ class Course extends Controller
     function successly($font=''){
         $arr=["code"=>1,"font"=>$font];
         echo json_encode($arr);die;
+    }
+    //上传视频
+    public function video(){
+        $fileName = $_REQUEST["filename"];
+        $tmpName = $_FILES["page"]["tmp_name"];
+        $content = file_get_contents($tmpName);
+        $img='./images/'.date("Y/m/d/");
+        $img3=$img.$fileName;
+        if(!is_dir($img)){
+            mkdir($img,0777,true);
+        }
+        file_put_contents($img3,$content,FILE_APPEND);
+        $arr=[
+            "res"=>true
+        ];
+        $img3=trim($img3,'.');
+        echo json_encode($img3);
     }
 }
