@@ -1,8 +1,13 @@
-{extend name="public/common"}
+/{extend name="public/common"}
 {block name="body"}
 <link rel="stylesheet" href="/layui/uploadify/uploadify.css">
 <script src="/layui/uploadify/jquery.uploadify.js"></script>
 <span id="img" style="display: none;"></span>
+<style>
+    .noe{
+        margin-left:120px;
+    }
+</style>
 <form  method="post" action="#" class="layui-form">
     <div class="layui-form-item">
         <label class="layui-form-label">课程名称</label>
@@ -50,6 +55,17 @@
             <span id="img3"></span>
         </div>
     </div>
+    <div class="layui-form-item showimg">
+        <label class="layui-form-label">课程视频</label>
+        <div class="layui-input-block">
+            <div style="display: none" class="layui-progress layui-progress-big novel" lay-filter="demo" lay-showPercent="true">
+                <div class="layui-progress-bar bar" lay-percent="0%"></div>
+            </div>
+            <input type="file" name="course_video" style="display: none" id="course_video">
+            <input type="button" value="上传视频" class="layui-btn layui-btn-radius" id="upload_btn"  required  lay-verify="required" autocomplete="off">
+        </div>
+        <span id="video" class="noe"></span>
+    </div>
     <div class="layui-form-item layui-form-text">
         <label class="layui-form-label">课程简介</label>
         <div class="layui-input-block">
@@ -64,12 +80,12 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-input-block">
-            <button class="layui-btn btn" lay-submit lay-filter="formDemo" id="button">立即提交</button>
+            <button class="layui-btn btn" type="button" lay-submit lay-filter="formDemo" id="but">立即提交</button>
             <button type="reset" class="layui-btn layui-btn-primary">重置</button>
         </div>
     </div>
 </form>
-
+<span id="video2" style="display: none"></span>
 <script>
     $(document).ready(function(){
         $("#uploadify").uploadify({
@@ -78,11 +94,11 @@
             onUploadSuccess:function(res,data,msg){
                 var imgPath = data+',';
                     $('#img').append(imgPath);
-
                     $('#img3').append('<img src="'+data+'" width="50px">');
 
             }
         })
+<<<<<<< HEAD
     });
     $(document).on('click','#button',function(){
         var course_name = $('input[name="course_name"]').val();
@@ -102,13 +118,105 @@
                 if(res.code==1){
                     layer.msg(res.msg)
                     location.href='/index/course/index'
-                }
-                if(res.code==2){
-                    alert(res.msg)
-                }
+=======
+        //上传图片
+        $("#upload_btn").click(function(){
+            var files = $("#course_video")[0].files[0];
+            if(!files){
+                $("#course_video").trigger("click");
+                return files;
             }
+        });
+        $('#course_video').on('input propertychange', function () {
+            //监听文本框
+            var files = $("#course_video")[0].files[0];
+            var lest=$('#lect_id').val();
+            var tmpName = files.size+"_chunk"+lest+'a';
+            var name=(files.lastModified)+tmpName;
+                window.localStorage.setItem(name,'1');
+            var chunk;//当前页面数值
+            upload(files);
+        });
+        //定时器
+        function timing() {
+            var str=0;
+            var vm=setInterval(function(){
+                str++;
+                if(str>=1){
+                    $('.novel').attr("style","display:none");
+                    clearInterval(vm);
+>>>>>>> 00984a09cb5cba0cd2c2029540a69bc7e97b2f8e
+                }
+            },1000);
+        }
+        function upload(file){
+            var lest=$('#lect_id').val();
+            var tmpName = file.size+"_chunk"+lest+'a';
+            var name=(file.lastModified)+tmpName;
+            var every_size=4096*4096;//每一页传递的数据
+            var chunks = Math.ceil(file.size / every_size);//一共多少页
+            chunk = window.localStorage.getItem(name) || 1;
+            chunk = parseInt(chunk);
+            var offset = (chunk-1) * every_size;//开始位置
+            var limit = chunk * every_size > file.size  ? file.size : chunk * every_size;
+            var page = file.slice(offset,limit);//获取一页的数据
+            var form = new FormData();//这是一个表单的对象
+            form.append("page",page);//类似于一个input框
+            form.append("filename",file.name);//文件名字
+            var per = (limit/file.size * 100).toFixed(1);
+            per =per+'%';
+            $('.novel').attr("style","display:block");
+            $.ajax({
+                type : "post",
+                data:form,
+                processData : false, //取消服务器对上传文件线程控制
+                contentType : false, //取消服务器设置上传文件的类型
+                cache : false, //不需要服务器设置缓存
+                dataType : 'json',
+                url : "/index/course/video",
+                success:function(msg){
+                    if(chunk >= chunks ){
+                        layui.element.progress('demo','100%');
+                        $('#video2').append(msg);
+                        var video='<video src="'+msg+'" width="100px" controls></video>';
+                        $('#video').append(video);
+                        timing();
+                    }else{
+                        chunk++;
+                        window.localStorage.setItem(name,chunk);
+                        layui.use('element', function(){
+                            layui.element.progress('demo',per);
+                        });
+                        upload(file);
+                    }
+                }
+            });
+        }
+        $(document).on('click','#but',function(){
+            var course_name = $('input[name="course_name"]').val();
+            var catalog_id = $("#catalog_id").val();
+            var cate_id = $("#cate_id").val();
+            var course_image = $("#img").text();
+            var lect_id = $("#lect_id").val();
+            var course_video = $("#video2").text();
+            var course_desc = $("#course_desc").val();
+            var course_notice = $("#course_notice").val();
+            $.ajax({
+                type:"post",
+                dataType:"json",
+                url:"/index/course/save",
+                data:{course_name:course_name,catalog_id:catalog_id,cate_id:cate_id,lect_id:lect_id,course_image:course_image,course_desc:course_desc,course_notice:course_notice,course_video:course_video},
+                success:function(res){
+                    if(info.code==1){
+                        alert(info.msg);
+                        location.href='/index/Slideshow/show'
+                    }else{
+                        alert(info.msg);
+                    }
+                }
+            })
+            return false;
         })
-        return false;
-    })
+    });
 </script>
 {/block}

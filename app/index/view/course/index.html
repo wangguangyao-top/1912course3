@@ -24,6 +24,7 @@
         <th>目录分类</th>
         <th>讲师选择</th>
         <th>课程图片</th>
+        <th>课程视频</th>
         <th>课程简介</th>
         <th>课程公告</th>
         <th>操作</th>
@@ -42,6 +43,7 @@
         <td>{$v.catalog_name}</td>
         <td>{$v.lect_name}</td>
         <td><img src="/uploads/{$v.course_image}" width="35" height="30"></td>
+        <td><video src="{$v.course_video}" width="100px" controls></video></td>
         <td>{$v.course_desc}</td>
         <td>{$v.course_notice}</td>
 
