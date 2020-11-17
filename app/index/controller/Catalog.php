@@ -21,7 +21,7 @@ class Catalog extends Controller
             $where[]=['catalog_name','like',"%$catalog_name%"];
         }
 
-        $info=CatalogModel::where(["is_del"=>1])->where($where)->paginate(2,false,['requry'=>input()]);
+        $info=CatalogModel::where(["is_del"=>1])->where($where)->select();
         $cata_info=$this->CataInfo($info);
         return view("index@catalog/index",compact("cata_info","info"));
     }
